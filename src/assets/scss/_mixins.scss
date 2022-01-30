@@ -1,0 +1,54 @@
+@mixin middle-content($max-width: 1170px) {
+  max-width: $max-width;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@mixin flex-container($align-items: null, $justify-content: null) {
+  display: flex;
+  align-items: $align-items;
+  justify-content: $justify-content;
+}
+
+@mixin set-font(
+  $font-size,
+  $line-height,
+  $font-weight: 400,
+  $color: null,
+  $font-family: null
+) {
+  font-size: $font-size;
+  line-height: $line-height;
+  font-weight: $font-weight;
+  color: $color;
+  font-family: $font-family;
+}
+
+@mixin box-shadow($args...) {
+  box-shadow: $args;
+  -webkit-box-shadow: $args;
+  -moz-box-shadow: $args;
+}
+
+@mixin round-button(
+  $bg-color: transparent,
+  $padding: 8px 16px,
+  $color: null,
+  $border: 1px solid $black
+) {
+  background-color: $bg-color;
+  padding: $padding;
+  color: $color;
+  border: $border;
+  border-radius: 99em;
+  cursor: pointer;
+  display: inline-block;
+}
+
+@mixin gradient-text($args...) {
+  background: linear-gradient($args);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}

@@ -1,0 +1,72 @@
+.css-menu-page {
+  &__container {
+    @include middle-content(70%);
+    padding-top: 2em;
+  }
+
+  &__header {
+    @include flex-container(center);
+  }
+
+  &__heading {
+    margin-bottom: 0;
+    flex: auto;
+    text-align: center;
+  }
+
+  &__wrapper {
+    padding-top: 2em;
+  }
+}
+
+.toggle-menu {
+  margin-top: 1em;
+
+  &.hide-menu {
+    display: none;
+  }
+
+  &__btn {
+    line-height: 20px;
+    padding: 5px 10px;
+    background-color: grey;
+    color: #000;
+    display: inline-block;
+
+    &:hover {
+      color: #000;
+    }
+
+    &--hidden {
+      background-color: #000;
+      color: #fff;
+      display: none;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  &__item {
+    width: 200px;
+    background-color: #000;
+    color: #fff;
+    margin: 2px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+  }
+}
+
+#show-menu:target ~ a[href='#show-menu'] {
+  display: none;
+}
+
+#show-menu:target ~ a[href='#hide-menu'] {
+  display: inline-block;
+}
+
+#show-menu:target ~ .hide-menu {
+  display: block;
+}
