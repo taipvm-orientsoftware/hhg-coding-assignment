@@ -1,4 +1,9 @@
 .css-menu-page {
+  > a {
+    display: block;
+    min-height: 100vh;
+  }
+
   &__container {
     @include middle-content(70%);
     padding-top: 2em;
@@ -34,6 +39,20 @@
     background-color: grey;
     color: #000;
     display: inline-block;
+
+    &:hover {
+      color: #000;
+    }
+
+    &--hidden {
+      background-color: #000;
+      color: #fff;
+      display: none;
+
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 
   &__item {
@@ -51,27 +70,14 @@
   }
 }
 
-#toggle-menu-control {
-  display: none;
-
-  &:checked + label {
-    background-color: #000;
-    color: #fff;
-  }
-
-  &:checked ~ .toggle-menu > .toggle-menu__container {
-    transform: translateY(0%);
-  }
-}
-
 #show-menu:target ~ a[href='#show-menu'] {
   display: none;
 }
 
-#show-menu:target ~ a[href='#hide-menu'] {
+#show-menu:target ~ a[href=' #'] {
   display: inline-block;
 }
 
-#show-menu:target .toggle-menu {
-  display: block;
+#show-menu:target ~ .toggle-menu > .toggle-menu__container {
+  transform: translateY(0%);
 }
