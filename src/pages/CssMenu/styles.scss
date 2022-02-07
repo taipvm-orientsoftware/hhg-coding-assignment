@@ -2,6 +2,7 @@
   > a {
     display: block;
     min-height: 100vh;
+    cursor: default;
   }
 
   &__container {
@@ -39,6 +40,7 @@
     background-color: grey;
     color: #000;
     display: inline-block;
+    cursor: default;
 
     &:hover {
       color: #000;
