@@ -5,5 +5,5 @@ export interface IPagination {
 
 export interface ISorter {
   sortBy: string;
-  orderBy: string;
+  order: string;
 }

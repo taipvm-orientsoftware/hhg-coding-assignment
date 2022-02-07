@@ -4,9 +4,9 @@ import { ISorter } from '../interfaces';
 
 export default function useSorter(
   sortBy: string = DEFAULT_SORT_BY,
-  orderBy: string = DEFAULT_ORDER_BY
+  order: string = DEFAULT_ORDER_BY
 ) {
-  const [sorter, setSorter] = useState<ISorter>({ sortBy, orderBy });
+  const [sorter, setSorter] = useState<ISorter>({ sortBy, order });
 
   const changeSortBy = useCallback(
     (field: string) => setSorter({ ...sorter, sortBy: field }),
@@ -14,12 +14,12 @@ export default function useSorter(
   );
 
   const changeOrderBy = useCallback(
-    (direction: string) => setSorter({ ...sorter, orderBy: direction }),
+    (direction: string) => setSorter({ ...sorter, order: direction }),
     [sorter]
   );
 
   const resetSorter = useCallback(
-    () => setSorter({ sortBy: DEFAULT_SORT_BY, orderBy: DEFAULT_ORDER_BY }),
+    () => setSorter({ sortBy: DEFAULT_SORT_BY, order: DEFAULT_ORDER_BY }),
     []
   );
 

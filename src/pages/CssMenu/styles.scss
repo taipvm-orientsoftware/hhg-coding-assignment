@@ -1,4 +1,9 @@
 .css-menu-page {
+  > a {
+    display: block;
+    min-height: 100vh;
+  }
+
   &__container {
     @include middle-content(70%);
     padding-top: 2em;
@@ -15,15 +20,17 @@
   }
 
   &__wrapper {
-    padding-top: 2em;
+    padding-top: 3em;
   }
 }
 
 .toggle-menu {
-  margin-top: 1em;
+  margin-top: 1.5em;
+  overflow: hidden;
 
-  &.hide-menu {
-    display: none;
+  &__container {
+    transform: translateY(-101%);
+    transition: all 0.5s;
   }
 
   &__btn {
@@ -52,10 +59,14 @@
     width: 200px;
     background-color: #000;
     color: #fff;
-    margin: 2px;
+    margin-top: 2px;
     text-align: center;
     vertical-align: middle;
     line-height: 50px;
+
+    a {
+      display: block;
+    }
   }
 }
 
@@ -63,10 +74,10 @@
   display: none;
 }
 
-#show-menu:target ~ a[href='#hide-menu'] {
+#show-menu:target ~ a[href=' #'] {
   display: inline-block;
 }
 
-#show-menu:target ~ .hide-menu {
-  display: block;
+#show-menu:target ~ .toggle-menu > .toggle-menu__container {
+  transform: translateY(0%);
 }

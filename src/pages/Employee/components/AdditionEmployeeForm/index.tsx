@@ -40,7 +40,10 @@ export default function AdditionEmployeeForm({
         <Form.Item
           name="name"
           label="Name"
-          rules={[{ required: true, message: 'Name is required' }]}
+          rules={[
+            { required: true, message: 'Name is required!' },
+            { whitespace: true, message: 'Invalid name!' },
+          ]}
         >
           <Input placeholder="Name" />
         </Form.Item>
@@ -48,7 +51,7 @@ export default function AdditionEmployeeForm({
           name="email"
           label="Email"
           rules={[
-            { required: true, type: 'email', message: 'Email is required' },
+            { required: true, type: 'email', message: 'Email is required!' },
           ]}
         >
           <Input placeholder="Email" />
@@ -56,7 +59,10 @@ export default function AdditionEmployeeForm({
         <Form.Item
           name="position"
           label="Position"
-          rules={[{ required: true, message: 'Position is required' }]}
+          rules={[
+            { required: true, message: 'Position is required!' },
+            { whitespace: true, message: 'Invalid position!' },
+          ]}
         >
           <Input placeholder="Posititon" />
         </Form.Item>
