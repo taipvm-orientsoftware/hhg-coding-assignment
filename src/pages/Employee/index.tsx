@@ -1,9 +1,10 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Table } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
+import { addEmployeeAPI, getEmployeesAPI } from '../../api/employeeAPI';
 import { GoBackButton } from '../../components';
 import { DEFAULT_PAGE_LIMIT } from '../../constants';
-import { useGetEmployees, usePagination, usePostEmployee } from '../../hooks';
+import { useGetRequest, usePagination, usePostRequest } from '../../hooks';
 import { IAddEmployeeData } from '../../interfaces';
 import columns from './columns';
 import { AdditionEmployeeForm } from './components';
@@ -18,8 +19,8 @@ export default function Employee(): JSX.Element {
 
   /** custom hooks */
   const { pagination, changeCurrentPage, resetPagination } = usePagination();
-  const { isLoading, employees, total, getEmployees } = useGetEmployees();
-  const { postEmployee } = usePostEmployee();
+  const { isLoading, data, total, getData } = useGetRequest(getEmployeesAPI);
+  const { postData } = usePostRequest(addEmployeeAPI);
 
   const handleTableChange = useCallback(
     ({ current }) => changeCurrentPage(current),
@@ -32,20 +33,20 @@ export default function Employee(): JSX.Element {
 
   const handleSubmitForm = useCallback(
     (data: IAddEmployeeData) => {
-      postEmployee(data);
+      postData(data);
       additionEmployeeForm.resetFields();
       resetPagination();
       setToggleAdditionEmployeeForm(false);
       setEffect(effect => effect + 1);
     },
-    [postEmployee, resetPagination, additionEmployeeForm]
+    [postData, resetPagination, additionEmployeeForm]
   );
 
   /** useEffect */
   useEffect(() => {
     const params = { ...pagination };
-    getEmployees(params);
-  }, [getEmployees, pagination, effect]);
+    getData(params);
+  }, [getData, pagination, effect]);
 
   return (
     <div className="employee-page">
@@ -70,7 +71,7 @@ export default function Employee(): JSX.Element {
         <Table
           className="employee-page__table"
           columns={columns}
-          dataSource={employees}
+          dataSource={data}
           loading={isLoading}
           pagination={{
             current: pagination.page,

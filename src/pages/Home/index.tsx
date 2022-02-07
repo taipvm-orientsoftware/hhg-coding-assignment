@@ -1,7 +1,12 @@
 import { Button } from 'antd';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Home(): JSX.Element {
+  useEffect(() => {
+    document.title = 'HHG coding assignment';
+  }, []);
+
   return (
     <div id="home" className="home-page">
       <div className="home-page__container">

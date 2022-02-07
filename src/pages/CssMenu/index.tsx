@@ -9,14 +9,8 @@ export default function CssMenu(): JSX.Element {
           <h1 className="css-menu-page__heading">CSS Menu Challenge</h1>
         </div>
         <div className="css-menu-page__wrapper">
-          <div id="show-menu" />
+          {/* <div id="show-menu" />
           <a className="toggle-menu__btn" href="#show-menu">
-            &#9776;
-          </a>
-          <a
-            className="toggle-menu__btn toggle-menu__btn--hidden"
-            href="#css-menu"
-          >
             &#9776;
           </a>
           <a
@@ -24,24 +18,31 @@ export default function CssMenu(): JSX.Element {
             href="#hide-menu"
           >
             &#9776;
-          </a>
-          <ul className="toggle-menu hide-menu">
-            <li className="toggle-menu__item">
-              <a href="/employees">1</a>
-            </li>
-            <li className="toggle-menu__item">
-              <a href="/employees">2</a>
-            </li>
-            <li className="toggle-menu__item">
-              <a href="/employees">3</a>
-            </li>
-            <li className="toggle-menu__item">
-              <a href="/employees">4</a>
-            </li>
-            <li className="toggle-menu__item">
-              <a href="/employees">5</a>
-            </li>
-          </ul>
+          </a> */}
+
+          <input type="checkbox" id="toggle-menu-control" />
+          <label className="toggle-menu__btn" htmlFor="toggle-menu-control">
+            &#9776;
+          </label>
+          <div className="toggle-menu">
+            <ul className="toggle-menu__container">
+              <li className="toggle-menu__item">
+                <a href="/">1</a>
+              </li>
+              <li className="toggle-menu__item">
+                <a href="/">2</a>
+              </li>
+              <li className="toggle-menu__item">
+                <a href="/">3</a>
+              </li>
+              <li className="toggle-menu__item">
+                <a href="/">4</a>
+              </li>
+              <li className="toggle-menu__item">
+                <a href="/">5</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

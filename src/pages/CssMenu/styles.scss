@@ -15,15 +15,17 @@
   }
 
   &__wrapper {
-    padding-top: 2em;
+    padding-top: 3em;
   }
 }
 
 .toggle-menu {
-  margin-top: 1em;
+  margin-top: 1.5em;
+  overflow: hidden;
 
-  &.hide-menu {
-    display: none;
+  &__container {
+    transform: translateY(-101%);
+    transition: all 0.5s;
   }
 
   &__btn {
@@ -32,30 +34,33 @@
     background-color: grey;
     color: #000;
     display: inline-block;
-
-    &:hover {
-      color: #000;
-    }
-
-    &--hidden {
-      background-color: #000;
-      color: #fff;
-      display: none;
-
-      &:hover {
-        color: #fff;
-      }
-    }
   }
 
   &__item {
     width: 200px;
     background-color: #000;
     color: #fff;
-    margin: 2px;
+    margin-top: 2px;
     text-align: center;
     vertical-align: middle;
     line-height: 50px;
+
+    a {
+      display: block;
+    }
+  }
+}
+
+#toggle-menu-control {
+  display: none;
+
+  &:checked + label {
+    background-color: #000;
+    color: #fff;
+  }
+
+  &:checked ~ .toggle-menu > .toggle-menu__container {
+    transform: translateY(0%);
   }
 }
 
@@ -67,6 +72,6 @@
   display: inline-block;
 }
 
-#show-menu:target ~ .hide-menu {
+#show-menu:target .toggle-menu {
   display: block;
 }
