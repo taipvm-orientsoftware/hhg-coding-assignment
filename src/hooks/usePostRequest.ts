@@ -27,6 +27,6 @@ export default function usePostRequest<T>(callbackfn: (body: T) => AxiosPromise)
   return {
     isLoading,
     status,
-    postData,
+    postData
   };
 }

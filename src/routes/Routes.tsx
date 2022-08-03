@@ -6,15 +6,15 @@ export default function Routes() {
   return useRoutes([
     {
       path: '/',
-      element: <Home />,
+      element: <Home />
     },
     {
-      path: '/employees',
-      element: <Employee />,
+      path: 'employees',
+      element: <Employee />
     },
     {
-      path: '/css-menu',
-      element: <CssMenu />,
-    },
+      path: 'css-menu',
+      element: <CssMenu />
+    }
   ]);
 }

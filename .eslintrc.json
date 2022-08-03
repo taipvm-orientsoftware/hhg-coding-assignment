@@ -35,6 +35,13 @@
         "ignoreRestSiblings": true
       }
     ],
+    "@typescript-eslint/no-inferrable-types": [
+      "error",
+      {
+        "ignoreParameters": true,
+        "ignoreProperties": true
+      }
+    ],
     "import/no-cycle": "off",
     "import/prefer-default-export": "off",
     "react/jsx-props-no-spreading": "off",

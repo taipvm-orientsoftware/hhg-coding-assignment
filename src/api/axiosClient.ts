@@ -6,7 +6,7 @@ class AxiosClient {
   constructor() {
     this.instance = axios.create({
       baseURL: process.env.REACT_APP_API_BASE_URL,
-      headers: this.headers,
+      headers: this.headers
     });
     this.instance.interceptors.request.use(this.interceptBeforeRequest, this.interceptRequestError);
     this.instance.interceptors.response.use(this.interceptResponseData, this.interceptResponseError);
@@ -14,7 +14,7 @@ class AxiosClient {
 
   get headers() {
     return {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     };
   }
 

@@ -4,16 +4,16 @@ import { IEmployee } from '../../interfaces';
 const columns: ColumnsType<IEmployee> = [
   {
     title: 'Name',
-    dataIndex: 'name',
+    dataIndex: 'name'
   },
   {
     title: 'Email',
-    dataIndex: 'email',
+    dataIndex: 'email'
   },
   {
     title: 'Position',
-    dataIndex: 'position',
-  },
+    dataIndex: 'position'
+  }
 ];
 
 export default columns;

@@ -19,6 +19,6 @@ export default function usePagination(page: number = DEFAULT_PAGE_SELECTED, limi
     changeCurrentPage,
     changePageLimit,
     setPagination,
-    resetPagination,
+    resetPagination
   };
 }

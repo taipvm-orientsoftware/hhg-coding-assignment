@@ -6,5 +6,5 @@ export const DEFAULT_ORDER_BY = 'desc';
 export enum NotificationType {
   SUCCESS = 'success',
   ERROR = 'error',
-  WARNING = 'warning',
+  WARNING = 'warning'
 }
