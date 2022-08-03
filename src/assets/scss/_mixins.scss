@@ -10,13 +10,7 @@
   justify-content: $justify-content;
 }
 
-@mixin set-font(
-  $font-size,
-  $line-height,
-  $font-weight: 400,
-  $color: null,
-  $font-family: null
-) {
+@mixin set-font($font-size, $line-height, $font-weight: 400, $color: null, $font-family: null) {
   font-size: $font-size;
   line-height: $line-height;
   font-weight: $font-weight;
@@ -30,12 +24,7 @@
   -moz-box-shadow: $args;
 }
 
-@mixin round-button(
-  $bg-color: transparent,
-  $padding: 8px 16px,
-  $color: null,
-  $border: 1px solid $black
-) {
+@mixin round-button($bg-color: transparent, $padding: 8px 16px, $color: null, $border: 1px solid $black) {
   background-color: $bg-color;
   padding: $padding;
   color: $color;

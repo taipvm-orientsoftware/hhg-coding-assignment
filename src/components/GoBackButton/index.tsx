@@ -1,16 +1,12 @@
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { Button } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 function GoBackButton(): JSX.Element {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
-    <Button
-      className="go-back-btn"
-      onClick={() => history.push('/')}
-      icon={<ArrowLeftOutlined />}
-    >
+    <Button className="go-back-btn" onClick={() => navigate(-1)} leftIcon={<ArrowBackIcon />}>
       Back to home page
     </Button>
   );

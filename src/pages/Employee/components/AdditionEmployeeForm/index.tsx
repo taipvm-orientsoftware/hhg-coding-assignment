@@ -2,17 +2,17 @@ import { Button, Form, FormInstance, Input, Modal } from 'antd';
 
 const layout = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 16 },
+  wrapperCol: { span: 16 }
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 6, span: 16 },
+  wrapperCol: { offset: 6, span: 16 }
 };
 
 interface AdditionEmployeeFormProps {
   form: FormInstance;
   visible: boolean;
-  onSubmit: (data: any) => void;
+  onSubmit: <T>(data: T) => void;
   onClose: () => void;
 }
 
@@ -20,7 +20,7 @@ export default function AdditionEmployeeForm({
   form,
   visible,
   onSubmit,
-  onClose,
+  onClose
 }: AdditionEmployeeFormProps): JSX.Element {
   return (
     <Modal
@@ -31,18 +31,13 @@ export default function AdditionEmployeeForm({
       footer={null}
       onCancel={onClose}
     >
-      <Form
-        {...layout}
-        form={form}
-        initialValues={{ name: '', email: '', position: '' }}
-        onFinish={onSubmit}
-      >
+      <Form {...layout} form={form} initialValues={{ name: '', email: '', position: '' }} onFinish={onSubmit}>
         <Form.Item
           name="name"
           label="Name"
           rules={[
             { required: true, message: 'Name is required!' },
-            { whitespace: true, message: 'Invalid name!' },
+            { whitespace: true, message: 'Invalid name!' }
           ]}
         >
           <Input placeholder="Name" />
@@ -50,9 +45,7 @@ export default function AdditionEmployeeForm({
         <Form.Item
           name="email"
           label="Email"
-          rules={[
-            { required: true, type: 'email', message: 'Email is required!' },
-          ]}
+          rules={[{ required: true, type: 'email', message: 'Email is required!' }]}
         >
           <Input placeholder="Email" />
         </Form.Item>
@@ -61,7 +54,7 @@ export default function AdditionEmployeeForm({
           label="Position"
           rules={[
             { required: true, message: 'Position is required!' },
-            { whitespace: true, message: 'Invalid position!' },
+            { whitespace: true, message: 'Invalid position!' }
           ]}
         >
           <Input placeholder="Posititon" />

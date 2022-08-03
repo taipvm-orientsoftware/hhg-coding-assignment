@@ -1,9 +1,4 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 class AxiosClient {
   private instance: AxiosInstance;
@@ -13,14 +8,8 @@ class AxiosClient {
       baseURL: process.env.REACT_APP_API_BASE_URL,
       headers: this.headers,
     });
-    this.instance.interceptors.request.use(
-      this.interceptBeforeRequest,
-      this.interceptRequestError
-    );
-    this.instance.interceptors.response.use(
-      this.interceptResponseData,
-      this.interceptResponseError
-    );
+    this.instance.interceptors.request.use(this.interceptBeforeRequest, this.interceptRequestError);
+    this.instance.interceptors.response.use(this.interceptResponseData, this.interceptResponseError);
   }
 
   get headers() {

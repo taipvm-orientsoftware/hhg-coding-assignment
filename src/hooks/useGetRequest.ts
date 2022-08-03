@@ -1,16 +1,15 @@
 import { AxiosPromise } from 'axios';
 import { useCallback, useState } from 'react';
+
 import { IEmployee } from '../interfaces';
 
-export default function useGetRequest(
-  callbackfn: (params: any) => AxiosPromise
-) {
+export default function useGetRequest(callbackfn: (params: any) => AxiosPromise) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<IEmployee[]>([]);
   const [total, setTotal] = useState<number>(0);
 
   const getData = useCallback(
-    async (params?) => {
+    async <T>(params: T) => {
       setIsLoading(true);
 
       try {

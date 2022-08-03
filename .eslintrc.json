@@ -20,39 +20,25 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": "latest",
+    "ecmaVersion": 13,
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "no-console": "off",
-    "no-unused-vars": [
+    "class-methods-use-this": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "vars": "all",
-        "args": "after-used",
         "argsIgnorePattern": "^_",
         "ignoreRestSiblings": true
       }
     ],
-    "class-methods-use-this": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-shadow": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "import/no-cycle": "off",
     "import/prefer-default-export": "off",
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
     "react/jsx-one-expression-per-line": "off",
-    "react/jsx-max-props-per-line": ["error", { "maximum": 3 }],
-    "jsx-a11y/label-has-associated-control": [
-      "error",
-      {
-        "required": {
-          "some": ["nesting", "id"]
-        }
-      }
-    ]
+    "react/jsx-max-props-per-line": ["error", { "maximum": 3, "when": "multiline" }]
   }
 }
