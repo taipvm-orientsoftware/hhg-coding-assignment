@@ -1,4 +1,5 @@
 import { ColumnsType } from 'antd/lib/table';
+
 import { IEmployee } from '../../interfaces';
 
 const columns: ColumnsType<IEmployee> = [

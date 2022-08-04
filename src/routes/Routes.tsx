@@ -1,20 +1,24 @@
 import { useRoutes } from 'react-router-dom';
 
-import { CssMenu, Employee, Home } from '../pages';
+import { MainLayout } from '../layouts';
+import { CssMenu, Employee } from '../pages';
 
 export default function Routes() {
   return useRoutes([
     {
       path: '/',
-      element: <Home />
-    },
-    {
-      path: 'employees',
-      element: <Employee />
-    },
-    {
-      path: 'css-menu',
-      element: <CssMenu />
+      element: <MainLayout />,
+      children: [
+        {
+          path: 'employee',
+          element: <Employee />,
+          index: true
+        },
+        {
+          path: 'css-menu',
+          element: <CssMenu />
+        }
+      ]
     }
   ]);
 }

@@ -1,6 +1,6 @@
-const fonts = {
-  body: 'Manrope, sans-serif',
-  heading: 'Manrope, sans-serif'
+const typography = {
+  fontFamily: 'Manrope, sans-serif',
+  fontSize: 16
 };
 
-export default fonts;
+export default typography;

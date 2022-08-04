@@ -30,11 +30,12 @@
     ]
   },
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
     "@chakra-ui/icons": "^2.0.4",
     "@chakra-ui/react": "^2.2.4",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
+    "@mantine/core": "^5.0.2",
+    "@mantine/hooks": "^5.0.2",
     "antd": "^4.22.3",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
