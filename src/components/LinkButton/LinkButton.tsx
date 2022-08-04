@@ -1,12 +1,12 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
-import { Link, LinkProps, useMatch, useResolvedPath } from 'react-router-dom';
+import { Button, ButtonProps } from '@mantine/core';
+import { LinkProps, NavLink, useMatch, useResolvedPath } from 'react-router-dom';
 
 export default function LinkButton({ children, to, size = 'sm', ...props }: LinkProps & ButtonProps) {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
 
   return (
-    <Button as={Link} to={to} {...props} size={size} colorScheme={match ? 'messenger' : 'gray'}>
+    <Button component={NavLink} to={to} {...props} size={size} variant={match ? 'filled' : 'subtle'}>
       {children}
     </Button>
   );

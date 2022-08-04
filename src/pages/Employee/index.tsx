@@ -1,7 +1,13 @@
-import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Center, Container, Pagination, Table } from '@mantine/core';
+import { useEffect, useState } from 'react';
+
+import { employeeApiService } from '../../domain/services';
+import { IEmployee } from '../../interfaces';
 
 export default function Employee(): JSX.Element {
   /** useState */
+  const [employees, setEmployees] = useState<IEmployee[]>([]);
+  const [total, setTotal] = useState<number>(0);
   // const [toggleAdditionEmployeeForm, setToggleAdditionEmployeeForm] = useState<boolean>(false);
   // const [effect, setEffect] = useState<number>(0);
 
@@ -9,7 +15,6 @@ export default function Employee(): JSX.Element {
 
   /** custom hooks */
   // const { pagination, changeCurrentPage, resetPagination } = usePagination();
-  // const { isLoading, data, total, getData } = useGetRequest(getEmployeesAPI);
   // const { postData } = usePostRequest(addEmployeeAPI);
 
   // const handleTableChange = useCallback(
@@ -35,64 +40,45 @@ export default function Employee(): JSX.Element {
   // );
 
   /** useEffect */
-  // useEffect(() => {
-  //   const params = { ...pagination };
-  //   getData(params);
-  // }, [getData, pagination, effect]);
+  useEffect(() => {
+    async function getData() {
+      try {
+        const response = await employeeApiService.getEmployeesWithPagination({ page: 1, limit: 10 });
+        setEmployees(response.data.data as IEmployee[]);
+        setTotal(response.data.total);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+    }
+    getData();
+  }, []);
 
   return (
-    <TableContainer maxW="8xl">
-      <Table size="sm" variant="striped">
-        <Thead>
-          <Tr>
-            <Th width="5">No</Th>
-            <Th width="2xl">Name</Th>
-            <Th width="3xl">Email</Th>
-            <Th width="2xl">Position</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>1</Td>
-            <Td>Minh Tai</Td>
-            <Td>minhtai.pv3598@gmail.com</Td>
-            <Td>Software Engineer</Td>
-          </Tr>
-        </Tbody>
+    <Container size="lg" sx={{ width: '100%' }} my="lg">
+      <Table striped fontSize="xs">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Position</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map((employee: IEmployee) => (
+            <tr key={employee.id}>
+              <td>{employee.id}</td>
+              <td>{employee.name}</td>
+              <td>{employee.email}</td>
+              <td>{employee.position}</td>
+            </tr>
+          ))}
+        </tbody>
       </Table>
-    </TableContainer>
-    // <div className="employee-page">
-    //   <header className="employee-page__header">
-    //     <GoBackButton />
-    //     <h1 className="employee-page__heading">Employee Management</h1>
-    //   </header>
-    //   <main className="employee-page__container">
-    //     <Button className="employee-page__btn--add" type="primary" onClick={handleToggleAdditionEmployeeForm}>
-    //       <PlusOutlined /> Add new
-    //     </Button>
-    //     <AdditionEmployeeForm
-    //       form={additionEmployeeForm}
-    //       visible={toggleAdditionEmployeeForm}
-    //       onSubmit={handleSubmitForm}
-    //       onClose={handleToggleAdditionEmployeeForm}
-    //     />
-    //     <Table
-    //       className="employee-page__table"
-    //       columns={columns}
-    //       dataSource={data}
-    //       loading={isLoading}
-    //       pagination={{
-    //         current: pagination.page,
-    //         pageSize: DEFAULT_PAGE_LIMIT,
-    //         total,
-    //         position: ['bottomCenter'],
-    //         showSizeChanger: false,
-    //       }}
-    //       onChange={handleTableChange}
-    //       rowKey="id"
-    //       bordered
-    //     />
-    //   </main>
-    // </div>
+      <Center>
+        <Pagination total={Math.ceil(total / 10)} size="sm" my="md" />
+      </Center>
+    </Container>
   );
 }

@@ -1,21 +1,28 @@
-import { Center, Heading } from '@chakra-ui/react';
-import { Button, Stack } from '@mantine/core';
-import { Link, Outlet, useLocation, useMatch } from 'react-router-dom';
+/* eslint-disable no-console */
+import { Center, Stack, Title } from '@mantine/core';
+import { Outlet } from 'react-router-dom';
+
+import { LinkButton } from '../components';
 
 export default function MainLayout() {
-  const location = useLocation();
-  const match = useMatch({ path: location.pathname, end: true });
-
   return (
-    <Stack justify="center" spacing={8}>
-      <Heading marginY={8}>HHG Coding Assignment</Heading>
-      <Center maxW="2xl" w="full" justifyContent="space-around">
-        <Button component={Link} to="employee" size="sm" color={match ? 'blue' : 'gray'}>
+    <Stack align="center" justify="center" spacing="md">
+      <Title order={1} sx={{ margin: '2rem auto' }}>
+        HHG Coding Assignment
+      </Title>
+      <Center
+        sx={{
+          justifyContent: 'space-between',
+          maxWidth: '31.25rem',
+          width: '100%'
+        }}
+      >
+        <LinkButton to="employee" size="xs">
           Employee Management
-        </Button>
-        <Button component={Link} to="css-menu" size="sm" color={match ? 'blue' : 'gray'}>
+        </LinkButton>
+        <LinkButton to="css-menu" size="xs">
           Menu Css Challenge
-        </Button>
+        </LinkButton>
       </Center>
       <Outlet />
     </Stack>

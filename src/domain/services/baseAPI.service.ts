@@ -1,6 +1,11 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { IGetWithPaginationRequest } from '../dtos/getWithPaginationRequest.dto';
+
+export interface IGetWithPaginationResponse<T> {
+  data: T[];
+  total: number;
+}
 
 export default abstract class BaseApiService {
   private axios: AxiosInstance;
@@ -42,27 +47,31 @@ export default abstract class BaseApiService {
     return Promise.reject(error);
   }
 
-  public get(url: string, config?: AxiosRequestConfig) {
-    return this.axios.get(url, config);
+  public get(path: string, config?: AxiosRequestConfig) {
+    return this.axios.get(path, config);
   }
 
-  public getWithPagination(url: string, params: IGetWithPaginationRequest, config?: AxiosRequestConfig) {
-    return this.get(url, { ...params, ...config });
+  public getWithPagination<T>(
+    path: string,
+    params: IGetWithPaginationRequest,
+    config?: AxiosRequestConfig
+  ): AxiosPromise<IGetWithPaginationResponse<T>> {
+    return this.get(path, { ...params, ...config });
   }
 
-  public post(url: string, data?: unknown, config?: AxiosRequestConfig) {
-    return this.axios.post(url, data, config);
+  public post<T>(path: string, data: T, config?: AxiosRequestConfig) {
+    return this.axios.post(path, data, config);
   }
 
-  public put(url: string, data?: unknown, config?: AxiosRequestConfig) {
-    return this.axios.put(url, data, config);
+  public put(path: string, data?: unknown, config?: AxiosRequestConfig) {
+    return this.axios.put(path, data, config);
   }
 
-  public patch(url: string, data?: unknown, config?: AxiosRequestConfig) {
-    return this.axios.patch(url, data, config);
+  public patch(path: string, data?: unknown, config?: AxiosRequestConfig) {
+    return this.axios.patch(path, data, config);
   }
 
-  public delete(url: string, config?: AxiosRequestConfig) {
-    return this.axios.delete(url, config);
+  public delete(path: string, config?: AxiosRequestConfig) {
+    return this.axios.delete(path, config);
   }
 }
