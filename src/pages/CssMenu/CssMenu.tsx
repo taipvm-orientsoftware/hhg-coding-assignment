@@ -1,12 +1,9 @@
-import { GoBackButton } from '../../components';
-
 export default function CssMenu(): JSX.Element {
   return (
     <div id="css-menu" className="css-menu-page">
       <a href=" #">
         <div className="css-menu-page__container">
           <div className="css-menu-page__header">
-            <GoBackButton />
             <h1 className="css-menu-page__heading">CSS Menu Challenge</h1>
           </div>
           <div className="css-menu-page__wrapper">

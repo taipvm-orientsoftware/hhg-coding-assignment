@@ -44,7 +44,7 @@ export default function Employee(): JSX.Element {
     async function getData() {
       try {
         const response = await employeeApiService.getEmployeesWithPagination({ page: 1, limit: 10 });
-        setEmployees(response.data.data as IEmployee[]);
+        setEmployees(response.data.items);
         setTotal(response.data.total);
       } catch (error) {
         // eslint-disable-next-line no-console

@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosPromise, AxiosRequestConfig, Axi
 import { IGetWithPaginationRequest } from '../dtos/getWithPaginationRequest.dto';
 
 export interface IGetWithPaginationResponse<T> {
-  data: T[];
+  items: T[];
   total: number;
 }
 

@@ -5,6 +5,12 @@ import { Outlet } from 'react-router-dom';
 import { LinkButton } from '../components';
 
 export default function MainLayout() {
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   navigate('employee');
+  // }, [navigate]);
+
   return (
     <Stack align="center" justify="center" spacing="md">
       <Title order={1} sx={{ margin: '2rem auto' }}>
