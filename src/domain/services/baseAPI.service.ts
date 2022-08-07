@@ -7,7 +7,7 @@ export interface IGetWithPaginationResponse<T> {
   total: number;
 }
 
-export default abstract class BaseApiService {
+export default abstract class BaseApiService<T> {
   private axios: AxiosInstance;
 
   public abstract baseUrl: string;
@@ -24,14 +24,6 @@ export default abstract class BaseApiService {
   }
 
   private async interceptBeforeRequest(config: AxiosRequestConfig) {
-    // if (!config.url?.includes('/auth/login') || !config.url.includes('/auth/refreshToken')) {
-    //   const { expiredTime } = LocalStorage.getItem('access_token');
-    //   const now = new Date().getTime();
-    //   if (expiredTime < now) {
-    //     const accessToken = await this.authService.refreshToken();
-    //     LocalStorage.setItem('access_token', accessToken);
-    //   }
-    // }
     return config;
   }
 
@@ -47,31 +39,31 @@ export default abstract class BaseApiService {
     return Promise.reject(error);
   }
 
-  public get(path: string, config?: AxiosRequestConfig) {
-    return this.axios.get(path, config);
+  public get<T, P>(path: string, params?: P, config?: AxiosRequestConfig): AxiosPromise<T> {
+    return this.axios.get<T>(path, { params, ...config });
   }
 
-  public getWithPagination<T>(
+  public getWithPagination(
     path: string,
     params: IGetWithPaginationRequest,
     config?: AxiosRequestConfig
   ): AxiosPromise<IGetWithPaginationResponse<T>> {
-    return this.get(path, { ...params, ...config });
+    return this.get(path, params, config);
   }
 
-  public post<T>(path: string, data: T, config?: AxiosRequestConfig) {
-    return this.axios.post(path, data, config);
+  public post<D>(path: string, data: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+    return this.axios.post<T>(path, data, config);
   }
 
-  public put(path: string, data?: unknown, config?: AxiosRequestConfig) {
-    return this.axios.put(path, data, config);
+  public put<D>(path: string, data: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+    return this.axios.put<T>(path, data, config);
   }
 
-  public patch(path: string, data?: unknown, config?: AxiosRequestConfig) {
-    return this.axios.patch(path, data, config);
+  public patch<D>(path: string, data: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+    return this.axios.patch<T>(path, data, config);
   }
 
-  public delete(path: string, config?: AxiosRequestConfig) {
-    return this.axios.delete(path, config);
+  public delete(path: string, config?: AxiosRequestConfig): AxiosPromise<T> {
+    return this.axios.delete<T>(path, config);
   }
 }
