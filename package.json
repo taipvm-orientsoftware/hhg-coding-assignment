@@ -30,12 +30,13 @@
     ]
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.0.4",
     "@chakra-ui/react": "^2.2.4",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mantine/core": "^5.0.2",
+    "@mantine/form": "^5.1.0",
     "@mantine/hooks": "^5.0.2",
+    "@tabler/icons": "^1.78.1",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "framer-motion": "^6.5.1",

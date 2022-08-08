@@ -10,7 +10,7 @@ export interface IGetWithPaginationResponse<T> {
 export default abstract class BaseApiService<T> {
   private axios: AxiosInstance;
 
-  public abstract baseUrl: string;
+  public abstract baseRoute: string;
 
   constructor() {
     this.axios = axios.create({
@@ -63,7 +63,7 @@ export default abstract class BaseApiService<T> {
     return this.axios.patch<T>(path, data, config);
   }
 
-  public delete(path: string, config?: AxiosRequestConfig): AxiosPromise<T> {
-    return this.axios.delete<T>(path, config);
+  public delete<T, P>(path: string, params: P, config?: AxiosRequestConfig): AxiosPromise<T> {
+    return this.axios.delete<T>(path, { params, ...config });
   }
 }

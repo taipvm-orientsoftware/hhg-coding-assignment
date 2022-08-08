@@ -1,1 +1,1 @@
-export { default as AdditionEmployeeForm } from './AdditionEmployeeForm';
+export { default as EmployeeAdditionForm } from './EmployeeAdditionForm';
