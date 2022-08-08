@@ -8,6 +8,7 @@ import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 import { ICreateEmployeeRequest } from '../../domain/dtos/createEmployeeRequest.dto';
 import { IEmployee } from '../../domain/models/employee.model';
 import { employeeApiService } from '../../domain/services';
+import { usePostRequest } from '../../hooks';
 import { EmployeeAdditionForm } from './components';
 
 export default function Employee(): JSX.Element {
@@ -20,7 +21,7 @@ export default function Employee(): JSX.Element {
   // const [effect, setEffect] = useState<number>(0);
 
   /** custom hooks */
-  const desktopScreen = useMediaQuery('(min-width: 1025px)');
+  const largeScreen = useMediaQuery('(min-width: 1367px)');
   const employeeAdditionForm = useForm<ICreateEmployeeRequest>({
     initialValues: {
       name: '',
@@ -28,8 +29,7 @@ export default function Employee(): JSX.Element {
       position: ''
     }
   });
-  // const { pagination, changeCurrentPage, resetPagination } = usePagination();
-  // const { postData } = usePostRequest(addEmployeeAPI);
+  const [, postData] = usePostRequest(employeeApiService.createEmployee);
 
   const handlePageChange = useCallback((page: number) => setPage(page), []);
 
@@ -39,17 +39,13 @@ export default function Employee(): JSX.Element {
 
   const handleSubmitForm = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
-      console.log(employeeAdditionForm.values);
       event.preventDefault();
-      // postData(data);
+      postData(employeeAdditionForm.values);
       // additionEmployeeForm.resetFields();
-      // resetPagination();
       // setToggleAdditionEmployeeForm(false);
-      // setEffect(effect => {
-      //   return effect + 1;
-      // });
+      // setEffect(effect => effect + 1);
     },
-    [employeeAdditionForm]
+    [employeeAdditionForm, postData]
   );
 
   /** useEffect */
@@ -71,11 +67,16 @@ export default function Employee(): JSX.Element {
   return (
     <>
       <Container size="lg" sx={{ width: '100%' }} my="lg">
-        <Button variant="outline" leftIcon={<IconUserPlus size={20} />} onClick={handleToggleEmployeeAdditionForm}>
+        <Button
+          variant="outline"
+          leftIcon={<IconUserPlus size={20} />}
+          size={largeScreen ? 'sm' : 'xs'}
+          onClick={handleToggleEmployeeAdditionForm}
+        >
           Add Employee
         </Button>
         <LoadingOverlay visible={isLoading} />
-        <Table striped fontSize={desktopScreen ? 'sm' : 'xs'} my="md">
+        <Table striped fontSize={largeScreen ? 'sm' : 'xs'} my="md">
           <thead>
             <tr>
               <th>No</th>
@@ -99,7 +100,7 @@ export default function Employee(): JSX.Element {
           <Pagination
             total={Math.ceil(total / DEFAULT_PAGE_SIZE)}
             onChange={handlePageChange}
-            size={desktopScreen ? 'md' : 'sm'}
+            size={largeScreen ? 'md' : 'sm'}
           />
         </Center>
       </Container>
