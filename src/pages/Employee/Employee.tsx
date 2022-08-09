@@ -8,13 +8,11 @@ import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 import { ICreateEmployeeRequest } from '../../domain/dtos/createEmployeeRequest.dto';
 import { IEmployee } from '../../domain/models/employee.model';
 import { employeeApiService } from '../../domain/services';
-import { usePostRequest } from '../../hooks';
+import { useGetRequest, usePostRequest } from '../../hooks';
 import { EmployeeAdditionForm } from './components';
 
 export default function Employee(): JSX.Element {
   /** useState */
-  const [employees, setEmployees] = useState<IEmployee[]>([]);
-  const [total, setTotal] = useState<number>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [toggleEmployeeAdditionForm, setToggleEmployeeAdditionForm] = useState<boolean>(false);
@@ -29,6 +27,7 @@ export default function Employee(): JSX.Element {
       position: ''
     }
   });
+  const [data, getData] = useGetRequest(employeeApiService.getEmployeesWithPagination);
   const [, postData] = usePostRequest(employeeApiService.createEmployee);
 
   const handlePageChange = useCallback((page: number) => setPage(page), []);
@@ -38,10 +37,9 @@ export default function Employee(): JSX.Element {
   }, []);
 
   const handleSubmitForm = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
+    async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      postData(employeeAdditionForm.values);
-      // additionEmployeeForm.resetFields();
+      await postData(employeeAdditionForm.values);
       // setToggleAdditionEmployeeForm(false);
       // setEffect(effect => effect + 1);
     },
@@ -50,19 +48,16 @@ export default function Employee(): JSX.Element {
 
   /** useEffect */
   useEffect(() => {
-    (async function getData() {
+    (async function fetchEmployees() {
       setLoading(true);
       try {
-        const { data } = await employeeApiService.getEmployeesWithPagination({ page, limit: DEFAULT_PAGE_SIZE });
-        setEmployees(data.items);
-        setTotal(data.total);
+        await getData({ page, limit: DEFAULT_PAGE_SIZE });
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+        console.error(error);
       }
       setLoading(false);
     })();
-  }, [page]);
+  }, [getData, page]);
 
   return (
     <>
@@ -86,7 +81,7 @@ export default function Employee(): JSX.Element {
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee: IEmployee) => (
+            {(data.items || []).map((employee: IEmployee) => (
               <tr key={employee.id}>
                 <td>{employee.id}</td>
                 <td>{employee.name}</td>
@@ -98,7 +93,7 @@ export default function Employee(): JSX.Element {
         </Table>
         <Center my="md">
           <Pagination
-            total={Math.ceil(total / DEFAULT_PAGE_SIZE)}
+            total={Math.ceil(data.total / DEFAULT_PAGE_SIZE)}
             onChange={handlePageChange}
             size={largeScreen ? 'md' : 'sm'}
           />

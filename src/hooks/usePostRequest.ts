@@ -1,15 +1,15 @@
 import { AxiosPromise } from 'axios';
 import { useCallback, useState } from 'react';
 
-type UsePostRequestReturnType<T, D> = [T, (body: D) => Promise<void>];
+type UsePostRequest<T, D> = [T, (body: D) => Promise<void>];
 
-export default function usePostRequest<T, D>(callbackfn: (body: D) => AxiosPromise<T>): UsePostRequestReturnType<T, D> {
+export default function usePostRequest<T, D>(callbackfn: (body: D) => AxiosPromise<T>): UsePostRequest<T, D> {
   const [data, setData] = useState<T>({} as T);
 
   const postData = useCallback(
-    async (body: D) => {
-      const { data } = await callbackfn(body);
-      setData(data);
+    async (data: D) => {
+      const response = await callbackfn(data);
+      setData(response.data);
     },
     [callbackfn]
   );

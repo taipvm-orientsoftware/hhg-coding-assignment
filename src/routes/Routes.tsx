@@ -1,7 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { MainLayout } from '../layouts';
-import { CssMenu, Employee } from '../pages';
+import { Employee, MenuCss } from '../pages';
 
 export default function Routes() {
   return useRoutes([
@@ -19,7 +19,7 @@ export default function Routes() {
         },
         {
           path: 'css-menu',
-          element: <CssMenu />
+          element: <MenuCss />
         }
       ]
     }

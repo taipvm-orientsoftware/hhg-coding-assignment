@@ -1,11 +1,13 @@
 import { AxiosPromise } from 'axios';
 import { useCallback, useState } from 'react';
 
-export default function useGetRequest<T>(callbackFn: (params: Record<string, unknown>) => AxiosPromise<T>) {
-  const [data, setData] = useState<T | T[]>([]);
+type UseGetRequest<T, P> = [T, (params: P) => Promise<void>];
+
+export default function useGetRequest<T, P>(callbackFn: (params: P) => AxiosPromise<T>): UseGetRequest<T, P> {
+  const [data, setData] = useState<T>({} as T);
 
   const getData = useCallback(
-    async (params: Record<string, unknown>) => {
+    async (params: P) => {
       const response = await callbackFn(params);
       setData(response.data);
     },

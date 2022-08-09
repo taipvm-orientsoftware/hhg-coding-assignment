@@ -4,8 +4,8 @@ import { Outlet } from 'react-router-dom';
 
 import { LinkButton } from '../../components';
 
-export default function MainLayout() {
-  const desktopScreen = useMediaQuery('(min-width: 1367px)');
+export default function MainLayout(): JSX.Element {
+  const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
 
   return (
     <Stack align="center" justify="center" spacing="md">
@@ -19,10 +19,10 @@ export default function MainLayout() {
           width: '100%'
         }}
       >
-        <LinkButton to="employees" size={desktopScreen ? 'sm' : 'xs'}>
+        <LinkButton to="employees" size={largeScreen ? 'sm' : 'xs'}>
           Employee Management
         </LinkButton>
-        <LinkButton to="css-menu" size={desktopScreen ? 'sm' : 'xs'}>
+        <LinkButton to="css-menu" size={largeScreen ? 'sm' : 'xs'}>
           Menu Css Challenge
         </LinkButton>
       </Center>

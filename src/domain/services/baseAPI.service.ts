@@ -10,7 +10,7 @@ export interface IGetWithPaginationResponse<T> {
 export default abstract class BaseApiService<T> {
   private axios: AxiosInstance;
 
-  public abstract baseRoute: string;
+  protected abstract baseRoute: string;
 
   constructor() {
     this.axios = axios.create({

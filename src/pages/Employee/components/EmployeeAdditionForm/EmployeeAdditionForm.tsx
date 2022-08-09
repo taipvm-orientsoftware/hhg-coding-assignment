@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Box, Button, TextInput } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { IconBallpen, IconMail, IconUser } from '@tabler/icons';

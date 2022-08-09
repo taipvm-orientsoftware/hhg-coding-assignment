@@ -1,4 +1,4 @@
-export default function CssMenu(): JSX.Element {
+export default function MenuCss(): JSX.Element {
   return (
     <div id="css-menu" className="css-menu-page">
       <a href=" #">
