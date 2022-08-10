@@ -18,7 +18,7 @@ export default function Routes() {
           element: <Employee />
         },
         {
-          path: 'css-menu',
+          path: 'menu-css',
           element: <MenuCss />
         }
       ]

@@ -22,7 +22,7 @@ export default function MainLayout(): JSX.Element {
         <LinkButton to="employees" size={largeScreen ? 'sm' : 'xs'}>
           Employee Management
         </LinkButton>
-        <LinkButton to="css-menu" size={largeScreen ? 'sm' : 'xs'}>
+        <LinkButton to="menu-css" size={largeScreen ? 'sm' : 'xs'}>
           Menu Css Challenge
         </LinkButton>
       </Center>

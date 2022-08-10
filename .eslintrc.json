@@ -46,6 +46,7 @@
     "import/prefer-default-export": "off",
     "react/jsx-props-no-spreading": "off",
     "react/jsx-one-expression-per-line": "off",
-    "react/jsx-max-props-per-line": ["error", { "maximum": 3, "when": "multiline" }]
+    "react/jsx-max-props-per-line": ["error", { "maximum": 3, "when": "multiline" }],
+    "react/require-default-props": "off"
   }
 }
