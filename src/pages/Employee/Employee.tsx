@@ -2,7 +2,7 @@ import { Button, Center, Container, Drawer, LoadingOverlay, Pagination, Table } 
 import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUserPlus } from '@tabler/icons';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 import { ICreateEmployeeRequest } from '../../domain/dtos/createEmployeeRequest.dto';
@@ -12,13 +12,13 @@ import { useGetRequest, usePostRequest } from '../../hooks';
 import { EmployeeAdditionForm } from './components';
 
 export default function Employee(): JSX.Element {
-  /** useState */
+  /** STATE */
   const [isLoading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [toggleEmployeeAdditionForm, setToggleEmployeeAdditionForm] = useState<boolean>(false);
   // const [effect, setEffect] = useState<number>(0);
 
-  /** custom hooks */
+  /** CUSTOM HOOKS */
   const largeScreen = useMediaQuery('(min-width: 1367px)');
   const employeeAdditionForm = useForm<ICreateEmployeeRequest>({
     initialValues: {
@@ -30,6 +30,7 @@ export default function Employee(): JSX.Element {
   const [data, getData] = useGetRequest(employeeApiService.getEmployeesWithPagination);
   const [, postData] = usePostRequest(employeeApiService.createEmployee);
 
+  /** FUNCTIONS */
   const handlePageChange = useCallback((page: number) => setPage(page), []);
 
   const handleToggleEmployeeAdditionForm = useCallback(() => {
@@ -40,24 +41,49 @@ export default function Employee(): JSX.Element {
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       await postData(employeeAdditionForm.values);
-      // setToggleAdditionEmployeeForm(false);
       // setEffect(effect => effect + 1);
     },
     [employeeAdditionForm, postData]
   );
 
-  /** useEffect */
+  const tableHeader = useMemo(
+    () => (
+      <tr>
+        <th>No</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Position</th>
+      </tr>
+    ),
+    []
+  );
+
+  const tableRows = useMemo(
+    () =>
+      data.items?.map((employee: IEmployee) => (
+        <tr key={employee.id}>
+          <td>{employee.id}</td>
+          <td>{employee.name}</td>
+          <td>{employee.email}</td>
+          <td>{employee.position}</td>
+        </tr>
+      )),
+    [data]
+  );
+
+  /** EFFECTS */
   useEffect(() => {
     (async function fetchEmployees() {
       setLoading(true);
       try {
         await getData({ page, limit: DEFAULT_PAGE_SIZE });
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
       }
       setLoading(false);
     })();
-  }, [getData, page]);
+  }, [getData, page, postData]);
 
   return (
     <>
@@ -72,24 +98,8 @@ export default function Employee(): JSX.Element {
         </Button>
         <LoadingOverlay visible={isLoading} />
         <Table striped fontSize={largeScreen ? 'sm' : 'xs'} my="md">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Position</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(data.items || []).map((employee: IEmployee) => (
-              <tr key={employee.id}>
-                <td>{employee.id}</td>
-                <td>{employee.name}</td>
-                <td>{employee.email}</td>
-                <td>{employee.position}</td>
-              </tr>
-            ))}
-          </tbody>
+          <thead>{tableHeader}</thead>
+          <tbody>{tableRows}</tbody>
         </Table>
         <Center my="md">
           <Pagination
