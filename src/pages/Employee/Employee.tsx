@@ -1,19 +1,7 @@
-import {
-  Button,
-  Center,
-  Checkbox,
-  Container,
-  Drawer,
-  LoadingOverlay,
-  MantineTheme,
-  Pagination,
-  Table,
-  useMantineTheme
-} from '@mantine/core';
+import { Button, Center, Checkbox, Container, Drawer, LoadingOverlay, Pagination, Table } from '@mantine/core';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import { IconCheck, IconUserPlus, IconX } from '@tabler/icons';
+import { IconUserPlus } from '@tabler/icons';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
@@ -21,6 +9,7 @@ import { ICreateEmployeeRequest } from '../../domain/dtos/createEmployeeRequest.
 import { IEmployee } from '../../domain/models/employee.model';
 import { employeeApiService } from '../../domain/services';
 import { useGetRequest, usePostRequest } from '../../hooks';
+import { pushNotification } from '../../utils';
 import { EmployeeAdditionForm } from './components';
 
 export default function Employee(): JSX.Element {
@@ -32,7 +21,6 @@ export default function Employee(): JSX.Element {
 
   /** CUSTOM HOOKS */
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
-  const theme: MantineTheme = useMantineTheme();
   const employeeAdditionForm: UseFormReturnType<ICreateEmployeeRequest> = useForm<ICreateEmployeeRequest>({
     initialValues: {
       name: '',
@@ -44,37 +32,6 @@ export default function Employee(): JSX.Element {
   const [, postData] = usePostRequest(employeeApiService.createEmployee);
 
   /** FUNCTIONS */
-  const handlePageChange = useCallback((page: number) => setPage(page), []);
-
-  const handleToggleEmployeeAdditionForm = useCallback(() => {
-    setToggleEmployeeAdditionForm((toggle: boolean) => !toggle);
-  }, []);
-
-  const pushNotification = useCallback(
-    (type: 'default' | 'success' | 'error', message: string) => {
-      const notificationStatus = {
-        default: {
-          color: theme.colors.blue[5],
-          icon: undefined
-        },
-        success: {
-          color: theme.colors.green[5],
-          icon: <IconCheck />
-        },
-        error: {
-          color: theme.colors.red[5],
-          icon: <IconX />
-        }
-      };
-      showNotification({
-        message,
-        color: notificationStatus[type].color,
-        icon: notificationStatus[type].icon
-      });
-    },
-    [theme]
-  );
-
   const handleSubmitForm = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -86,8 +43,9 @@ export default function Employee(): JSX.Element {
         pushNotification('error', 'Add new employee fail!');
       }
       employeeAdditionForm.reset();
+      setToggleEmployeeAdditionForm(false);
     },
-    [employeeAdditionForm, postData, pushNotification]
+    [employeeAdditionForm, postData]
   );
 
   const tableHeader = useMemo(
@@ -141,7 +99,7 @@ export default function Employee(): JSX.Element {
           variant="outline"
           leftIcon={<IconUserPlus size={20} />}
           size={largeScreen ? 'sm' : 'xs'}
-          onClick={handleToggleEmployeeAdditionForm}
+          onClick={() => setToggleEmployeeAdditionForm(true)}
         >
           Add Employee
         </Button>
@@ -153,14 +111,14 @@ export default function Employee(): JSX.Element {
         <Center my="md">
           <Pagination
             total={Math.ceil(data.total / DEFAULT_PAGE_SIZE)}
-            onChange={handlePageChange}
+            onChange={(page: number) => setPage(page)}
             size={largeScreen ? 'md' : 'sm'}
           />
         </Center>
       </Container>
       <Drawer
         opened={toggleEmployeeAdditionForm}
-        onClose={handleToggleEmployeeAdditionForm}
+        onClose={() => setToggleEmployeeAdditionForm(false)}
         position="right"
         title="ADD NEW EMPLOYEE"
         size="xl"
