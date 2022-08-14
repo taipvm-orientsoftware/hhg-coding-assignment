@@ -7,10 +7,10 @@ import { ICreateEmployeeRequest } from '../../../../domain/dtos/createEmployeeRe
 interface EmployeeAdditionFormProps {
   form: UseFormReturnType<ICreateEmployeeRequest>;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
-  loading?: boolean;
+  loading?: boolean | undefined;
 }
 
-export default function EmployeeAdditionForm({ form, onSubmit, loading = false }: EmployeeAdditionFormProps) {
+export default function EmployeeAdditionForm({ form, onSubmit, loading }: EmployeeAdditionFormProps) {
   return (
     <Box component="form" onSubmit={onSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <TextInput required label="Employee name" icon={<IconUser size={20} />} {...form.getInputProps('name')} />

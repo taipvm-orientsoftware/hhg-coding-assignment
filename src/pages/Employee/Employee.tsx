@@ -1,16 +1,37 @@
-import { Button, Center, Checkbox, Container, Drawer, LoadingOverlay, Pagination, Table } from '@mantine/core';
+import { Button, Container, Drawer } from '@mantine/core';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUserPlus } from '@tabler/icons';
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
+import { DataTable } from '../../components';
+import { ColumnType } from '../../components/DataTable';
 import { ICreateEmployeeRequest } from '../../domain/dtos/createEmployeeRequest.dto';
 import { IEmployee } from '../../domain/models/employee.model';
 import { employeeApiService } from '../../domain/services';
 import { useGetRequest, usePostRequest } from '../../hooks';
 import { pushNotification } from '../../utils';
 import { EmployeeAdditionForm } from './components';
+
+const columns: ColumnType<IEmployee>[] = [
+  {
+    title: 'ID',
+    key: 'id'
+  },
+  {
+    title: 'Name',
+    key: 'name'
+  },
+  {
+    title: 'Email',
+    key: 'email'
+  },
+  {
+    title: 'Position',
+    key: 'position'
+  }
+];
 
 export default function Employee(): JSX.Element {
   /** STATE */
@@ -48,37 +69,6 @@ export default function Employee(): JSX.Element {
     [employeeAdditionForm, postData]
   );
 
-  const tableHeader = useMemo(
-    () => (
-      <tr>
-        <th>
-          <Checkbox />
-        </th>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Position</th>
-      </tr>
-    ),
-    []
-  );
-
-  const tableRows = useMemo(
-    () =>
-      data.items?.map((employee: IEmployee) => (
-        <tr key={employee.id}>
-          <td>
-            <Checkbox />
-          </td>
-          <td>{employee.id}</td>
-          <td>{employee.name}</td>
-          <td>{employee.email}</td>
-          <td>{employee.position}</td>
-        </tr>
-      )),
-    [data]
-  );
-
   /** EFFECTS */
   useEffect(() => {
     (async function fetchEmployees() {
@@ -94,7 +84,7 @@ export default function Employee(): JSX.Element {
 
   return (
     <>
-      <Container size="lg" sx={{ width: '100%' }} my="lg">
+      <Container size="lg" my="lg" sx={{ width: '100%' }}>
         <Button
           variant="outline"
           leftIcon={<IconUserPlus size={20} />}
@@ -103,18 +93,16 @@ export default function Employee(): JSX.Element {
         >
           Add Employee
         </Button>
-        <LoadingOverlay visible={isLoading} />
-        <Table striped fontSize={largeScreen ? 'sm' : 'xs'} my="md" highlightOnHover>
-          <thead>{tableHeader}</thead>
-          <tbody>{tableRows}</tbody>
-        </Table>
-        <Center my="md">
-          <Pagination
-            total={Math.ceil(data.total / DEFAULT_PAGE_SIZE)}
-            onChange={(page: number) => setPage(page)}
-            size={largeScreen ? 'md' : 'sm'}
-          />
-        </Center>
+        <DataTable
+          columns={columns}
+          data={data.items}
+          striped
+          highlightOnHover
+          selectable
+          total={data.total}
+          loading={isLoading}
+          onPageChange={(page: number) => setPage(page)}
+        />
       </Container>
       <Drawer
         opened={toggleEmployeeAdditionForm}
@@ -124,7 +112,7 @@ export default function Employee(): JSX.Element {
         size="xl"
         padding={32}
       >
-        <EmployeeAdditionForm form={employeeAdditionForm} onSubmit={handleSubmitForm} />
+        <EmployeeAdditionForm form={employeeAdditionForm} onSubmit={handleSubmitForm} loading={isLoading} />
       </Drawer>
     </>
   );
