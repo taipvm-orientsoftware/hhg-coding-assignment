@@ -66,7 +66,24 @@
         "propertyDeclaration": true
       }
     ],
-    "import/no-cycle": "off",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "unknown", "object", "type"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "pathGroups": [
+          {
+            "pattern": "react*",
+            "group": "external",
+            "position": "before"
+          }
+        ]
+      }
+    ],
     "import/prefer-default-export": "off",
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
