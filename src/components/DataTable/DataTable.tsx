@@ -24,10 +24,10 @@ interface TableProps<T> extends MantineTableProps {
   sortable?: boolean | undefined;
   pageSize?: number | undefined;
   total?: number | undefined;
-  onPageChange?: (page: number) => void;
+  onPageChange?: ((page: number) => void) | undefined;
 }
 
-function DataTable<T extends { id: Key }>({
+export default function DataTable<T extends { id: Key }>({
   columns,
   data,
   loading = false,
@@ -37,7 +37,7 @@ function DataTable<T extends { id: Key }>({
   onPageChange,
   ...props
 }: TableProps<T>): JSX.Element {
-  const [_selectedRows] = useState<T[]>([]);
+  const [selectedRows] = useState<T[]>([]);
 
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
 
@@ -46,13 +46,17 @@ function DataTable<T extends { id: Key }>({
   const tableColumns = useMemo<JSX.Element>(
     () => (
       <tr>
-        {selectable && <th>{tableCheckbox}</th>}
+        {selectable && (
+          <th style={{ width: 40 }}>
+            <Checkbox checked={selectedRows.length === data.length} />
+          </th>
+        )}
         {columns.map((col: ColumnType<T>) => (
           <th key={String(col.key)}>{col.title.toUpperCase()}</th>
         ))}
       </tr>
     ),
-    [selectable, tableCheckbox, columns]
+    [selectable, columns, data, selectedRows]
   );
 
   const tableRows = useMemo<JSX.Element[]>(
@@ -86,5 +90,3 @@ function DataTable<T extends { id: Key }>({
     </>
   );
 }
-
-export default DataTable;
