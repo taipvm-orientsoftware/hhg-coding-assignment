@@ -1,5 +1,6 @@
-import { AxiosPromise } from 'axios';
 import { useCallback, useState } from 'react';
+
+import { AxiosPromise } from 'axios';
 
 type UsePostRequest<T, D> = [T, (body: D) => Promise<void>];
 
