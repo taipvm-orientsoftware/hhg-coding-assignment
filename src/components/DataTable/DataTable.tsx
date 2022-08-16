@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import {
   Checkbox,
@@ -38,18 +38,37 @@ export default function DataTable<T>({
   onPageChange,
   ...props
 }: TableProps<T>): JSX.Element {
-  const [selectedRows] = useState<T[]>([]);
+  /** STATE */
+  const [selectedItems, setSelectedItems] = useState<T[]>([]);
 
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
 
-  // const tableCheckbox = useMemo<JSX.Element>(() => <Checkbox />, []);
+  const toggleSelectAllItems = useCallback(
+    () => setSelectedItems((currentSelectedItems: T[]) => (currentSelectedItems.length === data?.length ? [] : data)),
+    [setSelectedItems, data]
+  );
+
+  const toggleSelectItem = useCallback((isSelected: boolean, item: T) => {
+    setSelectedItems((selectedItems: T[]) =>
+      isSelected
+        ? [...selectedItems, item]
+        : selectedItems.filter(
+            (selectedItem: T) =>
+              Object.entries(selectedItem).sort().toString() !== Object.entries(item).sort().toString()
+          )
+    );
+  }, []);
 
   const tableColumns = useMemo<JSX.Element>(
     () => (
       <tr>
         {selectable && (
           <th style={{ width: 40 }}>
-            <Checkbox checked={selectedRows.length === data?.length} />
+            <Checkbox
+              onChange={toggleSelectAllItems}
+              checked={selectedItems.length === data?.length}
+              indeterminate={selectedItems.length > 0 && selectedItems.length !== data?.length}
+            />
           </th>
         )}
         {columns.map((col: ColumnType<T>) => (
@@ -57,7 +76,7 @@ export default function DataTable<T>({
         ))}
       </tr>
     ),
-    [selectable, columns, data, selectedRows]
+    [selectable, toggleSelectAllItems, data, selectedItems, columns]
   );
 
   const tableRows = useMemo<JSX.Element[]>(
@@ -67,7 +86,10 @@ export default function DataTable<T>({
         <tr key={index}>
           {selectable && (
             <td>
-              <Checkbox />
+              <Checkbox
+                checked={selectedItems.includes(item)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => toggleSelectItem(e.currentTarget.checked, item)}
+              />
             </td>
           )}
           {columns.map(({ key }: ColumnType<T>) => (
@@ -75,7 +97,7 @@ export default function DataTable<T>({
           ))}
         </tr>
       )),
-    [data, columns, selectable]
+    [data, selectable, selectedItems, toggleSelectItem, columns]
   );
 
   const tablePagination = useMemo<JSX.Element>(

@@ -39,7 +39,7 @@ export default function Employee(): JSX.Element {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [toggleEmployeeAdditionForm, setToggleEmployeeAdditionForm] = useState<boolean>(false);
-  const [effect, setEffect] = useState<number>(0);
+  const [reload, setReload] = useState<number>(0);
 
   /** CUSTOM HOOKS */
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
@@ -60,7 +60,7 @@ export default function Employee(): JSX.Element {
       try {
         await postData(employeeAdditionForm.values);
         pushNotification('success', 'Add new employee successfully!');
-        setEffect((effect: number) => effect + 1);
+        setReload((reload: number) => reload + 1);
       } catch (error) {
         pushNotification('error', 'Add new employee fail!');
       }
@@ -81,7 +81,7 @@ export default function Employee(): JSX.Element {
       }
       setLoading(false);
     })();
-  }, [getData, page, effect]);
+  }, [getData, page, reload]);
 
   return (
     <>
