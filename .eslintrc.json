@@ -70,18 +70,19 @@
       "error",
       {
         "newlines-between": "always",
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "unknown", "object", "type"],
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true
         },
+        "groups": [["builtin", "external"], "internal", ["parent", "sibling", "index"]],
         "pathGroups": [
           {
-            "pattern": "react*",
+            "pattern": "react",
             "group": "external",
             "position": "before"
           }
-        ]
+        ],
+        "pathGroupsExcludedImportTypes": ["react"]
       }
     ],
     "import/prefer-default-export": "off",

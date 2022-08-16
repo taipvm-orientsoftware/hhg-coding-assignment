@@ -1,8 +1,9 @@
+import { FormEvent, useCallback, useEffect, useState } from 'react';
+
 import { Button, Container, Drawer } from '@mantine/core';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconUserPlus } from '@tabler/icons';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 import { DataTable } from '../../components';
@@ -12,7 +13,6 @@ import { IEmployee } from '../../domain/models/employee.model';
 import { employeeApiService } from '../../domain/services';
 import { useGetRequest, usePostRequest } from '../../hooks';
 import { pushNotification } from '../../utils';
-
 import { EmployeeAdditionForm } from './components';
 
 const columns: ColumnType<IEmployee>[] = [

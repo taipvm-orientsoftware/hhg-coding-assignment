@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react';
+
 import {
   Checkbox,
   Group,
@@ -7,7 +9,6 @@ import {
   TableProps as MantineTableProps
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { Key, ReactNode, useMemo, useState } from 'react';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 
@@ -27,7 +28,7 @@ interface TableProps<T> extends MantineTableProps {
   onPageChange?: ((page: number) => void) | undefined;
 }
 
-export default function DataTable<T extends { id: Key }>({
+export default function DataTable<T>({
   columns,
   data,
   loading = false,
@@ -41,14 +42,14 @@ export default function DataTable<T extends { id: Key }>({
 
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
 
-  const tableCheckbox = useMemo<JSX.Element>(() => <Checkbox />, []);
+  // const tableCheckbox = useMemo<JSX.Element>(() => <Checkbox />, []);
 
   const tableColumns = useMemo<JSX.Element>(
     () => (
       <tr>
         {selectable && (
           <th style={{ width: 40 }}>
-            <Checkbox checked={selectedRows.length === data.length} />
+            <Checkbox checked={selectedRows.length === data?.length} />
           </th>
         )}
         {columns.map((col: ColumnType<T>) => (
@@ -61,15 +62,20 @@ export default function DataTable<T extends { id: Key }>({
 
   const tableRows = useMemo<JSX.Element[]>(
     () =>
-      data?.map((item: T) => (
-        <tr key={item.id}>
-          {selectable && <td>{tableCheckbox}</td>}
+      data?.map((item: T, index: number) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <tr key={index}>
+          {selectable && (
+            <td>
+              <Checkbox />
+            </td>
+          )}
           {columns.map(({ key }: ColumnType<T>) => (
-            <td key={String(key)}>{item[key] as unknown as ReactNode}</td>
+            <td key={String(key)}>{item[key] as unknown as React.ReactNode}</td>
           ))}
         </tr>
       )),
-    [data, columns, selectable, tableCheckbox]
+    [data, columns, selectable]
   );
 
   const tablePagination = useMemo<JSX.Element>(
