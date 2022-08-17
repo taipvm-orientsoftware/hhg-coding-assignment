@@ -15,6 +15,8 @@ import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 export interface ColumnType<T> {
   title: string;
   key: keyof T;
+  width?: number | undefined;
+  sortable?: boolean | undefined;
 }
 
 interface TableProps<T> extends MantineTableProps {
@@ -49,60 +51,72 @@ export default function DataTable<T>({
   );
 
   const toggleSelectItem = useCallback((isSelected: boolean, item: T) => {
-    setSelectedItems((selectedItems: T[]) =>
+    setSelectedItems((currentSelectedItems: T[]) =>
       isSelected
-        ? [...selectedItems, item]
-        : selectedItems.filter(
+        ? [...currentSelectedItems, item]
+        : currentSelectedItems.filter(
             (selectedItem: T) =>
               Object.entries(selectedItem).sort().toString() !== Object.entries(item).sort().toString()
           )
     );
   }, []);
 
-  const tableColumns = useMemo<JSX.Element>(
+  const tableHeaderCheckbox = useMemo(
+    () => (
+      <th style={{ width: 40 }}>
+        <Checkbox
+          checked={selectedItems.length === data?.length}
+          indeterminate={selectedItems.length > 0 && selectedItems.length !== data?.length}
+          onChange={toggleSelectAllItems}
+        />
+      </th>
+    ),
+    [data?.length, selectedItems.length, toggleSelectAllItems]
+  );
+
+  const tableHeader = useMemo(
     () => (
       <tr>
-        {selectable && (
-          <th style={{ width: 40 }}>
-            <Checkbox
-              onChange={toggleSelectAllItems}
-              checked={selectedItems.length === data?.length}
-              indeterminate={selectedItems.length > 0 && selectedItems.length !== data?.length}
-            />
-          </th>
-        )}
+        {selectable && tableHeaderCheckbox}
         {columns.map((col: ColumnType<T>) => (
-          <th key={String(col.key)}>{col.title.toUpperCase()}</th>
+          <th key={String(col.key)} style={{ width: col.width }}>
+            {col.title.toUpperCase()}
+          </th>
         ))}
       </tr>
     ),
-    [selectable, toggleSelectAllItems, data, selectedItems, columns]
+    [columns, selectable, tableHeaderCheckbox]
   );
 
-  const tableRows = useMemo<JSX.Element[]>(
+  const tableRowCheckbox = useCallback(
+    (item: T) => (
+      <td>
+        <Checkbox
+          checked={selectedItems.includes(item)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => toggleSelectItem(e.currentTarget.checked, item)}
+        />
+      </td>
+    ),
+    [selectedItems, toggleSelectItem]
+  );
+
+  const tableRows = useMemo(
     () =>
       data?.map((item: T, index: number) => (
         // eslint-disable-next-line react/no-array-index-key
         <tr key={index}>
-          {selectable && (
-            <td>
-              <Checkbox
-                checked={selectedItems.includes(item)}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => toggleSelectItem(e.currentTarget.checked, item)}
-              />
-            </td>
-          )}
+          {selectable && tableRowCheckbox(item)}
           {columns.map(({ key }: ColumnType<T>) => (
             <td key={String(key)}>{item[key] as unknown as React.ReactNode}</td>
           ))}
         </tr>
       )),
-    [data, selectable, selectedItems, toggleSelectItem, columns]
+    [columns, data, selectable, tableRowCheckbox]
   );
 
   const tablePagination = useMemo<JSX.Element>(
     () => <Pagination total={Math.ceil(total / pageSize)} onChange={onPageChange} size={largeScreen ? 'md' : 'sm'} />,
-    [largeScreen, onPageChange, total, pageSize]
+    [largeScreen, onPageChange, pageSize, total]
   );
 
   return (
@@ -110,7 +124,7 @@ export default function DataTable<T>({
       <div style={{ position: 'relative' }}>
         <LoadingOverlay visible={loading} />
         <MantineTable fontSize={largeScreen ? 'sm' : 'xs'} my="md" {...props}>
-          <thead>{tableColumns}</thead>
+          <thead>{tableHeader}</thead>
           <tbody>{tableRows}</tbody>
         </MantineTable>
       </div>

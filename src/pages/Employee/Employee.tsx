@@ -3,7 +3,7 @@ import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { Button, Container, Drawer } from '@mantine/core';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconUserPlus } from '@tabler/icons';
+import { IconTrash, IconUserPlus } from '@tabler/icons';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 import { DataTable } from '../../components';
@@ -35,13 +35,13 @@ const columns: ColumnType<IEmployee>[] = [
 ];
 
 export default function Employee(): JSX.Element {
-  /** STATE */
+  /** State */
   const [isLoading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [toggleEmployeeAdditionForm, setToggleEmployeeAdditionForm] = useState<boolean>(false);
   const [reload, setReload] = useState<number>(0);
 
-  /** CUSTOM HOOKS */
+  /** Custom Hooks */
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
   const employeeAdditionForm: UseFormReturnType<ICreateEmployeeRequest> = useForm<ICreateEmployeeRequest>({
     initialValues: {
@@ -53,7 +53,7 @@ export default function Employee(): JSX.Element {
   const [data, getData] = useGetRequest(employeeApiService.getEmployeesWithPagination);
   const [, postData] = usePostRequest(employeeApiService.createEmployee);
 
-  /** FUNCTIONS */
+  /** Functions */
   const handleSubmitForm = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -70,7 +70,7 @@ export default function Employee(): JSX.Element {
     [employeeAdditionForm, postData]
   );
 
-  /** EFFECTS */
+  /** Effects */
   useEffect(() => {
     (async function fetchEmployees() {
       setLoading(true);
@@ -86,14 +86,19 @@ export default function Employee(): JSX.Element {
   return (
     <>
       <Container size="lg" my="lg" sx={{ width: '100%' }}>
-        <Button
-          variant="outline"
-          leftIcon={<IconUserPlus size={20} />}
-          size={largeScreen ? 'sm' : 'xs'}
-          onClick={() => setToggleEmployeeAdditionForm(true)}
-        >
-          Add Employee
-        </Button>
+        <Button.Group>
+          <Button
+            variant="outline"
+            leftIcon={<IconUserPlus size={20} />}
+            size={largeScreen ? 'sm' : 'xs'}
+            onClick={() => setToggleEmployeeAdditionForm(true)}
+          >
+            Add Employee
+          </Button>
+          <Button variant="outline" color="red" leftIcon={<IconTrash size={20} />} size={largeScreen ? 'sm' : 'xs'}>
+            Delete Employees
+          </Button>
+        </Button.Group>
         <DataTable
           columns={columns}
           data={data.items}
