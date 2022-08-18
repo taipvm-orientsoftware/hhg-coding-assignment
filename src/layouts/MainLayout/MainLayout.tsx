@@ -9,8 +9,8 @@ export default function MainLayout(): JSX.Element {
 
   return (
     <Stack align="center" justify="center" spacing="md">
-      <Title order={1} sx={{ margin: '2rem auto 1.5rem' }}>
-        HHG Coding Assignment
+      <Title order={1} sx={{ margin: '1.5rem auto 1rem' }}>
+        React Data Table
       </Title>
       <Group position="apart" sx={{ maxWidth: '31.25rem', width: '100%' }}>
         <LinkButton to="employees" size={largeScreen ? 'sm' : 'xs'}>

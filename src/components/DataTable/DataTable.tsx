@@ -15,19 +15,20 @@ import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 export interface ColumnType<T> {
   title: string;
   key: keyof T;
-  width?: number | undefined;
-  sortable?: boolean | undefined;
+  width?: number;
+  sortable?: boolean;
 }
 
 interface TableProps<T> extends MantineTableProps {
   columns: ColumnType<T>[];
   data: T[];
-  loading?: boolean | undefined;
-  selectable?: boolean | undefined;
-  sortable?: boolean | undefined;
-  pageSize?: number | undefined;
-  total?: number | undefined;
-  onPageChange?: ((page: number) => void) | undefined;
+  loading?: boolean;
+  selectable?: boolean;
+  sortable?: boolean;
+  pageSize?: number;
+  total?: number;
+  onPageChange?: (page: number) => void;
+  onSelectRowChange?: (items: T[]) => T[];
 }
 
 export default function DataTable<T>({
@@ -38,6 +39,7 @@ export default function DataTable<T>({
   total = 0,
   pageSize = DEFAULT_PAGE_SIZE,
   onPageChange,
+  onSelectRowChange,
   ...props
 }: TableProps<T>): JSX.Element {
   /** STATE */

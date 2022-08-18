@@ -7,7 +7,7 @@ export interface IGetWithPaginationResponse<T> {
   total: number;
 }
 
-export default abstract class BaseApiService<T> {
+export default abstract class BaseApiService {
   private axios: AxiosInstance;
 
   protected abstract baseRoute: string;
@@ -43,7 +43,7 @@ export default abstract class BaseApiService<T> {
     return this.axios.get<T>(path, { params, ...config });
   }
 
-  public getWithPagination(
+  public getWithPagination<T>(
     path: string,
     params: IGetWithPaginationRequest,
     config?: AxiosRequestConfig
@@ -51,19 +51,19 @@ export default abstract class BaseApiService<T> {
     return this.get(path, params, config);
   }
 
-  public post<D>(path: string, data: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public post<T, D>(path: string, data?: D, config?: AxiosRequestConfig): AxiosPromise<T> {
     return this.axios.post<T>(path, data, config);
   }
 
-  public put<D>(path: string, data: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public put<T, D>(path: string, data?: D, config?: AxiosRequestConfig): AxiosPromise<T> {
     return this.axios.put<T>(path, data, config);
   }
 
-  public patch<D>(path: string, data: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public patch<T, D>(path: string, data?: D, config?: AxiosRequestConfig): AxiosPromise<T> {
     return this.axios.patch<T>(path, data, config);
   }
 
-  public delete<T, P>(path: string, params: P, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public delete<T, P>(path: string, params?: P, config?: AxiosRequestConfig): AxiosPromise<T> {
     return this.axios.delete<T>(path, { params, ...config });
   }
 }
