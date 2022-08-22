@@ -2,9 +2,10 @@ import { NotificationProps, showNotification } from '@mantine/notifications';
 import { IconCheck, IconX } from '@tabler/icons';
 
 type NotificationType = 'default' | 'success' | 'error';
+type NotificationStatus = Record<NotificationType, Pick<NotificationProps, 'color' | 'icon'>>;
 
 export default function pushNotification(type: NotificationType, message: string): void {
-  const notificationStatus: Record<NotificationType, Pick<NotificationProps, 'color' | 'icon'>> = {
+  const notificationStatus: NotificationStatus = {
     default: {
       color: 'blue',
       icon: undefined

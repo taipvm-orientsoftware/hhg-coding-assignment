@@ -1,16 +1,16 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   Checkbox,
-  Group,
   LoadingOverlay,
   Pagination,
+  PaginationProps,
   Table as MantineTable,
-  TableProps as MantineTableProps
+  TableProps as MantineTableProps,
+  TextInput
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-
-import { DEFAULT_PAGE_SIZE } from '../../common/constants';
+import { IconSearch } from '@tabler/icons';
 
 export interface ColumnType<T> {
   title: string;
@@ -22,64 +22,72 @@ export interface ColumnType<T> {
 interface TableProps<T> extends MantineTableProps {
   columns: ColumnType<T>[];
   data: T[];
+  pageSize: number;
   loading?: boolean;
-  selectable?: boolean;
+  searchable?: boolean;
   sortable?: boolean;
-  pageSize?: number;
-  total?: number;
-  onPageChange?: (page: number) => void;
-  onSelectRowChange?: (items: T[]) => T[];
+  pagination?: PaginationProps;
+  rowSelection?: {
+    selectedRows: T[];
+    onChange: (selectedRows: T[]) => void;
+  };
 }
 
 export default function DataTable<T>({
   columns,
   data,
+  pageSize,
   loading = false,
-  selectable = false,
-  total = 0,
-  pageSize = DEFAULT_PAGE_SIZE,
-  onPageChange,
-  onSelectRowChange,
+  searchable = false,
+  rowSelection,
+  pagination,
   ...props
 }: TableProps<T>): JSX.Element {
-  /** STATE */
-  const [selectedItems, setSelectedItems] = useState<T[]>([]);
-
+  const [search, _setSearch] = useState<string>('');
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
+  const selectedItems: MutableRefObject<T[] | undefined> = useRef(rowSelection?.selectedRows);
 
-  const toggleSelectAllItems = useCallback(
-    () => setSelectedItems((currentSelectedItems: T[]) => (currentSelectedItems.length === data?.length ? [] : data)),
-    [setSelectedItems, data]
+  const toggleSelectAllItems: () => void = useCallback(() => {
+    if (rowSelection && selectedItems.current) {
+      selectedItems.current = selectedItems.current.length === data?.length ? [] : data;
+      rowSelection.onChange(selectedItems.current);
+    }
+  }, [data, rowSelection]);
+
+  const toggleSelectItem: (isSelected: boolean, item: T) => void = useCallback(
+    (isSelected: boolean, item: T) => {
+      if (rowSelection && selectedItems.current) {
+        selectedItems.current = isSelected
+          ? [...selectedItems.current, item]
+          : selectedItems.current.filter(
+              (selectedItem: T) =>
+                Object.entries(selectedItem).sort().toString() !== Object.entries(item).sort().toString()
+            );
+        rowSelection.onChange(selectedItems.current);
+      }
+    },
+    [rowSelection]
   );
 
-  const toggleSelectItem = useCallback((isSelected: boolean, item: T) => {
-    setSelectedItems((currentSelectedItems: T[]) =>
-      isSelected
-        ? [...currentSelectedItems, item]
-        : currentSelectedItems.filter(
-            (selectedItem: T) =>
-              Object.entries(selectedItem).sort().toString() !== Object.entries(item).sort().toString()
-          )
-    );
-  }, []);
-
-  const tableHeaderCheckbox = useMemo(
+  const tableHeaderCheckbox: JSX.Element = useMemo(
     () => (
       <th style={{ width: 40 }}>
         <Checkbox
-          checked={selectedItems.length === data?.length}
-          indeterminate={selectedItems.length > 0 && selectedItems.length !== data?.length}
+          checked={selectedItems.current && selectedItems.current.length === data?.length}
+          indeterminate={
+            selectedItems.current && selectedItems.current.length > 0 && selectedItems.current.length !== data?.length
+          }
           onChange={toggleSelectAllItems}
         />
       </th>
     ),
-    [data?.length, selectedItems.length, toggleSelectAllItems]
+    [data?.length, selectedItems, toggleSelectAllItems]
   );
 
-  const tableHeader = useMemo(
+  const tableHeader: JSX.Element = useMemo(
     () => (
       <tr>
-        {selectable && tableHeaderCheckbox}
+        {rowSelection && tableHeaderCheckbox}
         {columns.map((col: ColumnType<T>) => (
           <th key={String(col.key)} style={{ width: col.width }}>
             {col.title.toUpperCase()}
@@ -87,14 +95,14 @@ export default function DataTable<T>({
         ))}
       </tr>
     ),
-    [columns, selectable, tableHeaderCheckbox]
+    [columns, rowSelection, tableHeaderCheckbox]
   );
 
-  const tableRowCheckbox = useCallback(
+  const tableRowCheckbox: (item: T) => JSX.Element = useCallback(
     (item: T) => (
       <td>
         <Checkbox
-          checked={selectedItems.includes(item)}
+          checked={selectedItems?.current?.includes(item)}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => toggleSelectItem(e.currentTarget.checked, item)}
         />
       </td>
@@ -102,35 +110,56 @@ export default function DataTable<T>({
     [selectedItems, toggleSelectItem]
   );
 
-  const tableRows = useMemo(
+  const tableRows: JSX.Element[] = useMemo(
     () =>
       data?.map((item: T, index: number) => (
         // eslint-disable-next-line react/no-array-index-key
         <tr key={index}>
-          {selectable && tableRowCheckbox(item)}
-          {columns.map(({ key }: ColumnType<T>) => (
-            <td key={String(key)}>{item[key] as unknown as React.ReactNode}</td>
+          {rowSelection && tableRowCheckbox(item)}
+          {columns.map((col: ColumnType<T>) => (
+            <td key={String(col.key)}>{item[col.key] as unknown as React.ReactNode}</td>
           ))}
         </tr>
       )),
-    [columns, data, selectable, tableRowCheckbox]
+    [columns, data, rowSelection, tableRowCheckbox]
   );
 
-  const tablePagination = useMemo<JSX.Element>(
-    () => <Pagination total={Math.ceil(total / pageSize)} onChange={onPageChange} size={largeScreen ? 'md' : 'sm'} />,
-    [largeScreen, onPageChange, pageSize, total]
+  const tablePagination: JSX.Element | undefined = useMemo(
+    () =>
+      pagination && (
+        <Pagination
+          {...pagination}
+          total={Math.ceil(pagination.total / pageSize)}
+          onChange={pagination.onChange}
+          position={pagination.position || 'center'}
+          size={largeScreen ? 'md' : 'sm'}
+        />
+      ),
+    [largeScreen, pageSize, pagination]
   );
+
+  useEffect(() => {
+    selectedItems.current = rowSelection?.selectedRows;
+  }, [rowSelection?.selectedRows]);
 
   return (
     <>
+      {searchable && (
+        <TextInput
+          placeholder="Search by any field"
+          my="md"
+          icon={<IconSearch size={16} stroke={1.5} />}
+          defaultValue={search}
+        />
+      )}
       <div style={{ position: 'relative' }}>
         <LoadingOverlay visible={loading} />
-        <MantineTable fontSize={largeScreen ? 'sm' : 'xs'} my="md" {...props}>
+        <MantineTable {...props} fontSize={largeScreen ? 'sm' : 'xs'} my="md">
           <thead>{tableHeader}</thead>
           <tbody>{tableRows}</tbody>
         </MantineTable>
       </div>
-      <Group position="center">{tablePagination}</Group>
+      {tablePagination}
     </>
   );
 }
