@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 
-import { Button, Container, Drawer } from '@mantine/core';
+import { Button, Drawer } from '@mantine/core';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconTrash, IconUserPlus } from '@tabler/icons';
@@ -91,41 +91,39 @@ export default function Employee(): JSX.Element {
 
   return (
     <>
-      <Container size="lg" my="lg" sx={{ width: '100%' }}>
-        <div>
-          <Button
-            variant="outline"
-            leftIcon={<IconUserPlus size={20} />}
-            size={largeScreen ? 'sm' : 'xs'}
-            onClick={() => setToggleEmployeeAdditionForm(true)}
-            mr="md"
-          >
-            Add Employee
+      <div>
+        <Button
+          variant="filled"
+          leftIcon={<IconUserPlus size={20} />}
+          size={largeScreen ? 'sm' : 'xs'}
+          onClick={() => setToggleEmployeeAdditionForm(true)}
+          mr="md"
+        >
+          Add Employee
+        </Button>
+        {selectedEmployees.length > 0 && (
+          <Button variant="filled" color="red" leftIcon={<IconTrash size={20} />} size={largeScreen ? 'sm' : 'xs'}>
+            Delete {selectedEmployees.length} Employee{selectedEmployees.length > 1 && 's'}
           </Button>
-          {selectedEmployees.length > 0 && (
-            <Button variant="filled" color="red" leftIcon={<IconTrash size={20} />} size={largeScreen ? 'sm' : 'xs'}>
-              Delete {selectedEmployees.length} Employee{selectedEmployees.length > 1 && 's'}
-            </Button>
-          )}
-        </div>
-        <DataTable
-          columns={columns}
-          data={data.items}
-          pageSize={DEFAULT_PAGE_SIZE}
-          striped
-          highlightOnHover
-          loading={isLoading}
-          searchable
-          rowSelection={{
-            selectedRows: selectedEmployees,
-            onChange: (items: IEmployee[]) => setSelectedEmployees(items)
-          }}
-          pagination={{
-            total: data.total,
-            onChange: handlePaginationChange
-          }}
-        />
-      </Container>
+        )}
+      </div>
+      <DataTable
+        columns={columns}
+        data={data.items}
+        pageSize={DEFAULT_PAGE_SIZE}
+        striped
+        highlightOnHover
+        loading={isLoading}
+        searchable
+        rowSelection={{
+          selectedRows: selectedEmployees,
+          onChange: (items: IEmployee[]) => setSelectedEmployees(items)
+        }}
+        pagination={{
+          total: data.total,
+          onChange: handlePaginationChange
+        }}
+      />
       <Drawer
         opened={toggleEmployeeAdditionForm}
         onClose={() => setToggleEmployeeAdditionForm(false)}

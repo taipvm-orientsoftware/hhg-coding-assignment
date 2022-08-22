@@ -78,14 +78,13 @@ export default function DataTable<T>({
       {searchable && (
         <TextInput
           placeholder="Search by any field"
-          my="md"
-          icon={<IconSearch size={16} stroke={1.5} />}
+          icon={<IconSearch size={20} stroke={1.5} />}
           defaultValue={search}
         />
       )}
       <div style={{ position: 'relative' }}>
         <LoadingOverlay visible={loading} />
-        <MantineTable {...props} fontSize={largeScreen ? 'sm' : 'xs'} my="md">
+        <MantineTable {...props} fontSize={largeScreen ? 'sm' : 'xs'}>
           <thead>
             <tr>
               {rowSelection && (
