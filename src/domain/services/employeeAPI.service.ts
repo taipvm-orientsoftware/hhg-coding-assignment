@@ -12,6 +12,7 @@ class EmployeeApiService extends BaseApiService {
     super();
     this.getEmployeesWithPagination = this.getEmployeesWithPagination.bind(this);
     this.createEmployee = this.createEmployee.bind(this);
+    this.deleteEmployee = this.deleteEmployee.bind(this);
   }
 
   public getEmployeesWithPagination(
@@ -22,6 +23,10 @@ class EmployeeApiService extends BaseApiService {
 
   public createEmployee(data: ICreateEmployeeRequest): AxiosPromise<IEmployee> {
     return this.post(this.baseRoute, data);
+  }
+
+  public deleteEmployee(id: IEmployee['id']) {
+    return this.delete(`${this.baseRoute}/${id}`);
   }
 }
 

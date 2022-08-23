@@ -34,7 +34,7 @@ const columns: ColumnType<IEmployee>[] = [
   }
 ];
 
-export default function Employee(): JSX.Element {
+export default function EmployeeManagement(): JSX.Element {
   /* State */
   const [isLoading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);

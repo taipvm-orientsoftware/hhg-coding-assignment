@@ -1,7 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { MainLayout } from '../layouts';
-import { Employee, MenuCss } from '../pages';
+import { EmployeeManagement, MenuCss } from '../pages';
 
 export default function Routes() {
   return useRoutes([
@@ -11,11 +11,11 @@ export default function Routes() {
       children: [
         {
           index: true,
-          element: <Navigate to="employees" />
+          element: <Navigate to="employee-management" />
         },
         {
-          path: 'employees',
-          element: <Employee />
+          path: 'employee-management',
+          element: <EmployeeManagement />
         },
         {
           path: 'menu-css',

@@ -1,12 +1,12 @@
 export default function MenuCss(): JSX.Element {
   return (
-    <div id="css-menu" className="css-menu-page">
+    <div id="menu-css" className="menu-css">
       <a href=" #">
-        <div className="css-menu-page__container">
-          <div className="css-menu-page__header">
-            <h1 className="css-menu-page__heading">CSS Menu Challenge</h1>
+        <div className="menu-css__container">
+          <div className="menu-css__header">
+            <h1 className="menu-css__heading">CSS Menu Challenge</h1>
           </div>
-          <div className="css-menu-page__wrapper">
+          <div className="menu-css__wrapper">
             <div id="show-menu" />
             <a className="toggle-menu__btn" href="#show-menu">
               &#9776;

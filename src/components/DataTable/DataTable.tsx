@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import React, { MutableRefObject, PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   Checkbox,
@@ -7,7 +7,8 @@ import {
   PaginationProps,
   Table as MantineTable,
   TableProps as MantineTableProps,
-  TextInput
+  TextInput,
+  UnstyledButton
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons';
@@ -17,6 +18,20 @@ export interface ColumnType<T> {
   key: keyof T;
   width?: number;
   sortable?: boolean;
+}
+
+interface ThProps extends PropsWithChildren {
+  reversed: boolean;
+  sorted: boolean;
+  onSort(): void;
+}
+
+function Th(_props: ThProps) {
+  return (
+    <th>
+      <UnstyledButton />
+    </th>
+  );
 }
 
 interface TableProps<T> extends MantineTableProps {
@@ -29,7 +44,7 @@ interface TableProps<T> extends MantineTableProps {
   pagination?: PaginationProps;
   rowSelection?: {
     selectedRows: T[];
-    onChange: (selectedRows: T[]) => void;
+    onChange(selectedRows: T[]): void;
   };
 }
 
