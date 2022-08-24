@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
     "@mantine/core": "^5.2.3",
     "@mantine/form": "^5.2.3",
     "@mantine/hooks": "^5.2.3",

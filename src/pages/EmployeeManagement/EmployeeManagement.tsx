@@ -111,7 +111,6 @@ export default function EmployeeManagement(): JSX.Element {
         columns={columns}
         data={data.items}
         pageSize={DEFAULT_PAGE_SIZE}
-        striped
         highlightOnHover
         loading={isLoading}
         searchable

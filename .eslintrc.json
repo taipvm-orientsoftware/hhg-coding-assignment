@@ -41,6 +41,7 @@
         "leadingUnderscore": "allow"
       }
     ],
+    "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }],
     "@typescript-eslint/no-inferrable-types": [
       "error",
       {

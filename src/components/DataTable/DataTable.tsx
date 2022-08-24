@@ -1,15 +1,6 @@
-import React, {
-  MutableRefObject,
-  PropsWithChildren,
-  ThHTMLAttributes,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { MutableRefObject, PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
-  Center,
   Checkbox,
   Group,
   LoadingOverlay,
@@ -18,13 +9,12 @@ import {
   Table as MantineTable,
   TableProps as MantineTableProps,
   Text,
-  TextInput,
-  UnstyledButton
+  TextInput
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconChevronDown, IconChevronUp, IconSearch, IconSelector } from '@tabler/icons';
 
-import useStyles from './DataTable.styles';
+import { Button, Span, Th } from './DataTable.styles';
 
 export interface ColumnType<T> {
   title: string;
@@ -33,29 +23,26 @@ export interface ColumnType<T> {
   sortable?: boolean;
 }
 
-interface ThProps extends PropsWithChildren, ThHTMLAttributes<HTMLTableCellElement> {
+interface HeaderColumnProps extends PropsWithChildren, React.ThHTMLAttributes<HTMLTableCellElement> {
   reversed: boolean;
   sorted: boolean;
   onSort: () => void;
 }
 
-function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const { classes } = useStyles();
+function HeaderColumn({ children, reversed, sorted, onSort }: HeaderColumnProps) {
   const directionIcon = reversed ? IconChevronUp : IconChevronDown;
   const Icon = sorted ? directionIcon : IconSelector;
   return (
-    <th>
-      <UnstyledButton onClick={onSort}>
+    <Th>
+      <Button onClick={onSort}>
         <Group position="apart">
-          <Text weight={700} size="sm">
-            {children}
-          </Text>
-          <Center className={classes.icon}>
-            <Icon size={16} stroke={1.5} />
-          </Center>
+          <Text size="xs">{children}</Text>
+          <Span>
+            <Icon size={15} stroke={1.5} />
+          </Span>
         </Group>
-      </UnstyledButton>
-    </th>
+      </Button>
+    </Th>
   );
 }
 
@@ -83,7 +70,7 @@ export default function DataTable<T>({
   pagination,
   ...props
 }: TableProps<T>): JSX.Element {
-  const [search, _setSearch] = useState<string>('');
+  const [searchTerm, _setSearchTerm] = useState<string>('');
   const [sortBy, _setSortBy] = useState<ColumnType<T>['key'] | null>(null);
   const [reverseSortDirection, _setReverseSortDirection] = useState(false);
 
@@ -122,7 +109,7 @@ export default function DataTable<T>({
         <TextInput
           placeholder="Search by any field"
           icon={<IconSearch size={20} stroke={1.5} />}
-          defaultValue={search}
+          defaultValue={searchTerm}
         />
       )}
       <div style={{ position: 'relative' }}>
@@ -144,7 +131,7 @@ export default function DataTable<T>({
                 </th>
               )}
               {columns.map((col: ColumnType<T>) => (
-                <Th
+                <HeaderColumn
                   key={String(col.key)}
                   sorted={sortBy === col.key}
                   reversed={reverseSortDirection}
@@ -152,7 +139,7 @@ export default function DataTable<T>({
                   style={{ width: col.width }}
                 >
                   {col.title.toUpperCase()}
-                </Th>
+                </HeaderColumn>
               ))}
             </tr>
           </thead>
