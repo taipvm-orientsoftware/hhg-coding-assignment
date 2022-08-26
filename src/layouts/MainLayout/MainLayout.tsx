@@ -13,8 +13,8 @@ export default function MainLayout(): JSX.Element {
       <Stack justify="center" spacing="md" sx={{ maxWidth: 1140, width: '100%' }} mb="lg">
         <SegmentedControl
           data={[
-            { label: 'Employee Management', value: 'employee-management' },
-            { label: 'Menu CSS Challenge', value: 'menu-css' }
+            { label: 'Employee Management', value: 'employee-management' }
+            // { label: 'Menu CSS Challenge', value: 'menu-css' }
           ]}
           value={pathname.replace('/', '')}
           onChange={(value: string) => navigate(value)}

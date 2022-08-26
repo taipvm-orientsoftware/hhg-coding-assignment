@@ -71,8 +71,8 @@ export default function DataTable<T>({
   ...props
 }: TableProps<T>): JSX.Element {
   const [searchTerm, _setSearchTerm] = useState<string>('');
-  const [sortBy, _setSortBy] = useState<ColumnType<T>['key'] | null>(null);
-  const [reverseSortDirection, _setReverseSortDirection] = useState(false);
+  const [sortBy, setSortBy] = useState<ColumnType<T>['key'] | null>(null);
+  const [reverseSortDirection, setReverseSortDirection] = useState<boolean>(false);
 
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
   const selectedRows: MutableRefObject<T[] | undefined> = useRef(rowSelection?.selectedRows);
@@ -97,6 +97,15 @@ export default function DataTable<T>({
       }
     },
     [rowSelection]
+  );
+
+  const handleSortChange: (field: ColumnType<T>['key']) => void = useCallback(
+    (field: ColumnType<T>['key']) => {
+      const reversed = field === sortBy ? !reverseSortDirection : false;
+      setReverseSortDirection(reversed);
+      setSortBy(field);
+    },
+    [reverseSortDirection, sortBy]
   );
 
   useEffect(() => {
@@ -135,7 +144,7 @@ export default function DataTable<T>({
                   key={String(col.key)}
                   sorted={sortBy === col.key}
                   reversed={reverseSortDirection}
-                  onSort={() => null}
+                  onSort={() => handleSortChange(col.key)}
                   style={{ width: col.width }}
                 >
                   {col.title.toUpperCase()}

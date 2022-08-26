@@ -11,7 +11,7 @@ import { ColumnType } from '../../components/DataTable';
 import { ICreateEmployeeRequest } from '../../domain/dtos/createEmployeeRequest.dto';
 import { IEmployee } from '../../domain/models/employee.model';
 import { employeeApiService } from '../../domain/services';
-import { useGetRequest, usePostRequest } from '../../hooks';
+import { useDeleteRequest, useGetRequest, usePostRequest } from '../../hooks';
 import { pushNotification } from '../../utils';
 import { EmployeeAdditionForm } from './components';
 
@@ -53,6 +53,7 @@ export default function EmployeeManagement(): JSX.Element {
   });
   const [data, getData] = useGetRequest(employeeApiService.getEmployeesWithPagination);
   const [, postData] = usePostRequest(employeeApiService.createEmployee);
+  const [, deleteData] = useDeleteRequest(employeeApiService.deleteEmployee);
 
   /* Functions */
   const handlePaginationChange: (page: number) => void = useCallback((page: number) => {
@@ -74,6 +75,23 @@ export default function EmployeeManagement(): JSX.Element {
       setToggleEmployeeAdditionForm(false);
     },
     [employeeAdditionForm, postData]
+  );
+
+  const handleClickDeleteBtn: (params: IEmployee['id'] | Array<IEmployee['id']>) => Promise<void> = useCallback(
+    async (params: IEmployee['id'] | Array<IEmployee['id']>) => {
+      if (!Array.isArray(params)) {
+        setLoading(true);
+        try {
+          await deleteData(params);
+          pushNotification('success', `Delete employee id ${params} successfully!`);
+          setReload((reload: number) => reload + 1);
+        } catch (error) {
+          pushNotification('error', `Delete employee id ${params} fail!`);
+        }
+        setLoading(true);
+      }
+    },
+    [deleteData]
   );
 
   /* Effects */
@@ -102,7 +120,13 @@ export default function EmployeeManagement(): JSX.Element {
           Add Employee
         </Button>
         {selectedEmployees.length > 0 && (
-          <Button variant="filled" color="red" leftIcon={<IconTrash size={20} />} size={largeScreen ? 'sm' : 'xs'}>
+          <Button
+            variant="filled"
+            color="red"
+            leftIcon={<IconTrash size={20} />}
+            size={largeScreen ? 'sm' : 'xs'}
+            onClick={() => handleClickDeleteBtn(selectedEmployees[0].id)}
+          >
             Delete {selectedEmployees.length} Employee{selectedEmployees.length > 1 && 's'}
           </Button>
         )}
