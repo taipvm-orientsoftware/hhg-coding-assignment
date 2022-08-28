@@ -1,8 +1,8 @@
-import { AxiosPromise } from 'axios';
+import { AxiosPromise, AxiosResponse } from 'axios';
 
 import { ICreateEmployeeRequest } from '../dtos/createEmployeeRequest.dto';
 import { IGetWithPaginationRequest } from '../dtos/getWithPaginationRequest.dto';
-import { IEmployee } from '../models/employee.model';
+import Employee, { IEmployee } from '../models/employee.model';
 import BaseApiService, { IGetWithPaginationResponse } from './baseAPI.service';
 
 class EmployeeApiService extends BaseApiService {
@@ -17,15 +17,20 @@ class EmployeeApiService extends BaseApiService {
 
   public getEmployeesWithPagination(
     params: IGetWithPaginationRequest
-  ): AxiosPromise<IGetWithPaginationResponse<IEmployee>> {
-    return this.getWithPagination(this.baseRoute, params);
+  ): AxiosPromise<IGetWithPaginationResponse<Employee>> {
+    return this.getWithPagination<IEmployee>(this.baseRoute, params).then(
+      (data: AxiosResponse<IGetWithPaginationResponse<IEmployee>>) => {
+        data.data.items.map((item: IEmployee) => new Employee(item));
+        return data;
+      }
+    );
   }
 
   public createEmployee(data: ICreateEmployeeRequest): AxiosPromise<IEmployee> {
     return this.post(this.baseRoute, data);
   }
 
-  public deleteEmployee(id: IEmployee['id']) {
+  public deleteEmployee(id: IEmployee['id']): AxiosPromise<IEmployee> {
     return this.delete(`${this.baseRoute}/${id}`);
   }
 }

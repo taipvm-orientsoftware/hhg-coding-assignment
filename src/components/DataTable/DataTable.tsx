@@ -50,14 +50,16 @@ interface TableProps<T> extends MantineTableProps {
   columns: ColumnType<T>[];
   data: T[];
   pageSize: number;
-  loading?: boolean;
-  searchable?: boolean;
-  sortable?: boolean;
-  pagination?: PaginationProps;
-  rowSelection?: {
-    selectedRows: T[];
-    onChange: (selectedRows: T[]) => void;
-  };
+  loading?: boolean | undefined;
+  searchable?: boolean | undefined;
+  sortable?: boolean | undefined;
+  pagination?: PaginationProps | undefined;
+  rowSelection?:
+    | {
+        selectedRows: T[];
+        onChange: (selectedRows: T[]) => void;
+      }
+    | undefined;
 }
 
 export default function DataTable<T>({
@@ -119,6 +121,7 @@ export default function DataTable<T>({
           placeholder="Search by any field"
           icon={<IconSearch size={20} stroke={1.5} />}
           defaultValue={searchTerm}
+          size={largeScreen ? 'sm' : 'xs'}
         />
       )}
       <div style={{ position: 'relative' }}>
@@ -129,7 +132,7 @@ export default function DataTable<T>({
               {rowSelection && (
                 <th style={{ width: 40 }}>
                   <Checkbox
-                    checked={selectedRows.current && selectedRows.current.length === data?.length}
+                    checked={selectedRows.current?.length !== 0 && selectedRows.current?.length === data?.length}
                     indeterminate={
                       selectedRows.current &&
                       selectedRows.current.length > 0 &&

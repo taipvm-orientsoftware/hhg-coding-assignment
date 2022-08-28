@@ -31,6 +31,10 @@ const columns: ColumnType<IEmployee>[] = [
   {
     title: 'Position',
     key: 'position'
+  },
+  {
+    title: 'Created Date',
+    key: 'createdAt'
   }
 ];
 
@@ -42,7 +46,7 @@ export default function EmployeeManagement(): JSX.Element {
   const [reload, setReload] = useState<number>(0);
   const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
 
-  /* Custom Hooks */
+  /* Custom hooks */
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
   const employeeAdditionForm: UseFormReturnType<ICreateEmployeeRequest> = useForm<ICreateEmployeeRequest>({
     initialValues: {
@@ -61,37 +65,43 @@ export default function EmployeeManagement(): JSX.Element {
     setPage(page);
   }, []);
 
+  const reloadTable: () => void = useCallback(() => {
+    setSelectedEmployees([]);
+    setReload((reload: number) => reload + 1);
+  }, []);
+
   const handleSubmitForm: (e: FormEvent<HTMLFormElement>) => Promise<void> = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
         await postData(employeeAdditionForm.values);
         pushNotification('success', 'Add new employee successfully!');
-        setReload((reload: number) => reload + 1);
+        reloadTable();
       } catch (error) {
         pushNotification('error', 'Add new employee fail!');
       }
       employeeAdditionForm.reset();
       setToggleEmployeeAdditionForm(false);
     },
-    [employeeAdditionForm, postData]
+    [employeeAdditionForm, postData, reloadTable]
   );
 
-  const handleClickDeleteBtn: (params: IEmployee['id'] | Array<IEmployee['id']>) => Promise<void> = useCallback(
-    async (params: IEmployee['id'] | Array<IEmployee['id']>) => {
-      if (!Array.isArray(params)) {
+  const handleBulkDeleteEmployees: (employees: IEmployee[]) => Promise<void> = useCallback(
+    async (employees: IEmployee[]) => {
+      if (employees.length === 1) {
+        const { id } = employees[0];
         setLoading(true);
         try {
-          await deleteData(params);
-          pushNotification('success', `Delete employee id ${params} successfully!`);
-          setReload((reload: number) => reload + 1);
+          await deleteData(id);
+          pushNotification('success', `Delete employee id ${id} successfully!`);
+          reloadTable();
         } catch (error) {
-          pushNotification('error', `Delete employee id ${params} fail!`);
+          pushNotification('error', `Delete employee id ${id} fail!`);
         }
-        setLoading(true);
+        setLoading(false);
       }
     },
-    [deleteData]
+    [deleteData, reloadTable]
   );
 
   /* Effects */
@@ -99,9 +109,9 @@ export default function EmployeeManagement(): JSX.Element {
     (async function fetchEmployees() {
       setLoading(true);
       try {
-        await getData({ page, limit: DEFAULT_PAGE_SIZE });
+        await getData({ page, limit: DEFAULT_PAGE_SIZE, sortBy: 'createdAt', orderBy: 'asc' });
       } catch (error) {
-        //
+        pushNotification('error', `Fail to fetch employees! Something went wrong!`);
       }
       setLoading(false);
     })();
@@ -125,7 +135,7 @@ export default function EmployeeManagement(): JSX.Element {
             color="red"
             leftIcon={<IconTrash size={20} />}
             size={largeScreen ? 'sm' : 'xs'}
-            onClick={() => handleClickDeleteBtn(selectedEmployees[0].id)}
+            onClick={() => handleBulkDeleteEmployees(selectedEmployees)}
           >
             Delete {selectedEmployees.length} Employee{selectedEmployees.length > 1 && 's'}
           </Button>
@@ -133,7 +143,7 @@ export default function EmployeeManagement(): JSX.Element {
       </div>
       <DataTable
         columns={columns}
-        data={data.items}
+        data={data?.items || []}
         pageSize={DEFAULT_PAGE_SIZE}
         highlightOnHover
         loading={isLoading}
@@ -143,7 +153,7 @@ export default function EmployeeManagement(): JSX.Element {
           onChange: (items: IEmployee[]) => setSelectedEmployees(items)
         }}
         pagination={{
-          total: data.total,
+          total: data?.total || 0,
           onChange: handlePaginationChange
         }}
       />

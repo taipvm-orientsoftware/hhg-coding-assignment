@@ -48,7 +48,7 @@ export default abstract class BaseApiService {
     params: IGetWithPaginationRequest,
     config?: AxiosRequestConfig
   ): AxiosPromise<IGetWithPaginationResponse<T>> {
-    return this.get(path, params, config);
+    return this.get<IGetWithPaginationResponse<T>, IGetWithPaginationRequest>(path, params, config);
   }
 
   public post<T, D>(path: string, data?: D, config?: AxiosRequestConfig): AxiosPromise<T> {

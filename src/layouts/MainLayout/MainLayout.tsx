@@ -1,9 +1,11 @@
 import { Center, SegmentedControl, Stack, Title } from '@mantine/core';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@mantine/hooks';
+import { Location, NavigateFunction, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 export default function MainLayout(): JSX.Element {
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const navigate: NavigateFunction = useNavigate();
+  const { pathname }: Location = useLocation();
+  const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
 
   return (
     <Center sx={{ flexDirection: 'column' }}>
@@ -12,6 +14,7 @@ export default function MainLayout(): JSX.Element {
       </Title>
       <Stack justify="center" spacing="md" sx={{ maxWidth: 1140, width: '100%' }} mb="lg">
         <SegmentedControl
+          size={largeScreen ? 'sm' : 'xs'}
           data={[
             { label: 'Employee Management', value: 'employee-management' }
             // { label: 'Menu CSS Challenge', value: 'menu-css' }
