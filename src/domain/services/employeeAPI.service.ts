@@ -17,16 +17,11 @@ class EmployeeApiService extends BaseApiService {
 
   public getEmployeesWithPagination(
     params: IGetWithPaginationRequest
-  ): AxiosPromise<IGetWithPaginationResponse<Employee>> {
-    return this.getWithPagination<IEmployee>(this.baseRoute, params).then(
-      (data: AxiosResponse<IGetWithPaginationResponse<IEmployee>>) => {
-        data.data.items.map((item: IEmployee) => new Employee(item));
-        return data;
-      }
-    );
+  ): Promise<AxiosResponse<IGetWithPaginationResponse<Employee>>> {
+    return this.getWithPagination<IEmployee>(this.baseRoute, params);
   }
 
-  public createEmployee(data: ICreateEmployeeRequest): AxiosPromise<IEmployee> {
+  public createEmployee(data: ICreateEmployeeRequest): Promise<AxiosResponse<IEmployee>> {
     return this.post(this.baseRoute, data);
   }
 

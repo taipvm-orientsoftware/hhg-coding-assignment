@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { IGetWithPaginationRequest } from '../dtos/getWithPaginationRequest.dto';
 
@@ -39,7 +39,7 @@ export default abstract class BaseApiService {
     return Promise.reject(error);
   }
 
-  public get<T, P>(path: string, params?: P, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public get<T, P>(path: string, params?: P, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.axios.get<T>(path, { params, ...config });
   }
 
@@ -47,23 +47,23 @@ export default abstract class BaseApiService {
     path: string,
     params: IGetWithPaginationRequest,
     config?: AxiosRequestConfig
-  ): AxiosPromise<IGetWithPaginationResponse<T>> {
+  ): Promise<AxiosResponse<IGetWithPaginationResponse<T>>> {
     return this.get<IGetWithPaginationResponse<T>, IGetWithPaginationRequest>(path, params, config);
   }
 
-  public post<T, D>(path: string, data?: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public post<T, D>(path: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.axios.post<T>(path, data, config);
   }
 
-  public put<T, D>(path: string, data?: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public put<T, D>(path: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.axios.put<T>(path, data, config);
   }
 
-  public patch<T, D>(path: string, data?: D, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public patch<T, D>(path: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.axios.patch<T>(path, data, config);
   }
 
-  public delete<T, P>(path: string, params?: P, config?: AxiosRequestConfig): AxiosPromise<T> {
+  public delete<T, P>(path: string, params?: P, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.axios.delete<T>(path, { params, ...config });
   }
 }

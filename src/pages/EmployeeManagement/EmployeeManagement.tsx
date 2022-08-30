@@ -60,15 +60,15 @@ export default function EmployeeManagement(): JSX.Element {
   const [, deleteData] = useDeleteRequest(employeeApiService.deleteEmployee);
 
   /* Functions */
-  const handlePaginationChange: (page: number) => void = useCallback((page: number) => {
+  const handlePaginationChange: (page: number) => void = (page: number) => {
     setSelectedEmployees([]);
     setPage(page);
-  }, []);
+  };
 
-  const reloadTable: () => void = useCallback(() => {
+  const reloadTable: () => void = () => {
     setSelectedEmployees([]);
     setReload((reload: number) => reload + 1);
-  }, []);
+  };
 
   const handleSubmitForm: (e: FormEvent<HTMLFormElement>) => Promise<void> = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
@@ -83,25 +83,22 @@ export default function EmployeeManagement(): JSX.Element {
       employeeAdditionForm.reset();
       setToggleEmployeeAdditionForm(false);
     },
-    [employeeAdditionForm, postData, reloadTable]
+    [employeeAdditionForm, postData]
   );
 
   const handleBulkDeleteEmployees: (employees: IEmployee[]) => Promise<void> = useCallback(
     async (employees: IEmployee[]) => {
-      if (employees.length === 1) {
-        const { id } = employees[0];
-        setLoading(true);
-        try {
-          await deleteData(id);
-          pushNotification('success', `Delete employee id ${id} successfully!`);
-          reloadTable();
-        } catch (error) {
-          pushNotification('error', `Delete employee id ${id} fail!`);
-        }
-        setLoading(false);
+      setLoading(true);
+      try {
+        await Promise.all(employees.map((employee: IEmployee) => deleteData(employee.id)));
+        pushNotification('success', `Delete ${employees.length} employee(s) successfully!`);
+        reloadTable();
+      } catch (error) {
+        pushNotification('error', `Delete employees fail!`);
       }
+      setLoading(false);
     },
-    [deleteData, reloadTable]
+    [deleteData]
   );
 
   /* Effects */
@@ -109,7 +106,7 @@ export default function EmployeeManagement(): JSX.Element {
     (async function fetchEmployees() {
       setLoading(true);
       try {
-        await getData({ page, limit: DEFAULT_PAGE_SIZE, sortBy: 'createdAt', orderBy: 'asc' });
+        await getData({ page, limit: DEFAULT_PAGE_SIZE });
       } catch (error) {
         pushNotification('error', `Fail to fetch employees! Something went wrong!`);
       }

@@ -21,6 +21,7 @@ export interface ColumnType<T> {
   key: keyof T;
   width?: number;
   sortable?: boolean;
+  render?: ((text: string, record: T, index: number) => React.ReactNode) | undefined;
 }
 
 interface HeaderColumnProps extends PropsWithChildren, React.ThHTMLAttributes<HTMLTableCellElement> {
@@ -46,6 +47,11 @@ function HeaderColumn({ children, reversed, sorted, onSort }: HeaderColumnProps)
   );
 }
 
+interface RowSelectionProps<T> {
+  selectedRows: T[];
+  onChange: (selectedRows: T[]) => void;
+}
+
 interface TableProps<T> extends MantineTableProps {
   columns: ColumnType<T>[];
   data: T[];
@@ -54,12 +60,7 @@ interface TableProps<T> extends MantineTableProps {
   searchable?: boolean | undefined;
   sortable?: boolean | undefined;
   pagination?: PaginationProps | undefined;
-  rowSelection?:
-    | {
-        selectedRows: T[];
-        onChange: (selectedRows: T[]) => void;
-      }
-    | undefined;
+  rowSelection?: RowSelectionProps<T> | undefined;
 }
 
 export default function DataTable<T>({
@@ -169,8 +170,10 @@ export default function DataTable<T>({
                     />
                   </td>
                 )}
-                {columns.map((col: ColumnType<T>) => (
-                  <td key={String(col.key)}>{item[col.key] as unknown as React.ReactNode}</td>
+                {columns.map(({ key, render }: ColumnType<T>) => (
+                  <td key={String(key)}>
+                    {render ? render(String(item[key]), item, index) : (item[key] as unknown as string)}
+                  </td>
                 ))}
               </tr>
             ))}
