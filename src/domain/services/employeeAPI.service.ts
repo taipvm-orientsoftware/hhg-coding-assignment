@@ -1,8 +1,8 @@
-import { AxiosPromise, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 import { ICreateEmployeeRequest } from '../dtos/createEmployeeRequest.dto';
 import { IGetWithPaginationRequest } from '../dtos/getWithPaginationRequest.dto';
-import Employee, { IEmployee } from '../models/employee.model';
+import { IEmployee } from '../models/employee.model';
 import BaseApiService, { IGetWithPaginationResponse } from './baseAPI.service';
 
 class EmployeeApiService extends BaseApiService {
@@ -17,7 +17,7 @@ class EmployeeApiService extends BaseApiService {
 
   public getEmployeesWithPagination(
     params: IGetWithPaginationRequest
-  ): Promise<AxiosResponse<IGetWithPaginationResponse<Employee>>> {
+  ): Promise<AxiosResponse<IGetWithPaginationResponse<IEmployee>>> {
     return this.getWithPagination<IEmployee>(this.baseRoute, params);
   }
 
@@ -25,7 +25,7 @@ class EmployeeApiService extends BaseApiService {
     return this.post(this.baseRoute, data);
   }
 
-  public deleteEmployee(id: IEmployee['id']): AxiosPromise<IEmployee> {
+  public deleteEmployee(id: IEmployee['id']): Promise<AxiosResponse<IEmployee>> {
     return this.delete(`${this.baseRoute}/${id}`);
   }
 }

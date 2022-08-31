@@ -34,7 +34,8 @@ const columns: ColumnType<IEmployee>[] = [
   },
   {
     title: 'Created Date',
-    key: 'createdAt'
+    key: 'createdAt',
+    render: (isoDate: string) => <>{new Date(isoDate).toISOString().substring(0, 10)}</>
   }
 ];
 
@@ -94,7 +95,7 @@ export default function EmployeeManagement(): JSX.Element {
         pushNotification('success', `Delete ${employees.length} employee(s) successfully!`);
         reloadTable();
       } catch (error) {
-        pushNotification('error', `Delete employees fail!`);
+        pushNotification('error', 'Delete employees fail!');
       }
       setLoading(false);
     },
@@ -106,7 +107,7 @@ export default function EmployeeManagement(): JSX.Element {
     (async function fetchEmployees() {
       setLoading(true);
       try {
-        await getData({ page, limit: DEFAULT_PAGE_SIZE });
+        await getData({ page, limit: DEFAULT_PAGE_SIZE, order: 'desc' });
       } catch (error) {
         pushNotification('error', `Fail to fetch employees! Something went wrong!`);
       }

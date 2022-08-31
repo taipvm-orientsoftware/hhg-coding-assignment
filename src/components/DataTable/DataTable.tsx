@@ -19,8 +19,8 @@ import { Button, Span, Th } from './DataTable.styles';
 export interface ColumnType<T> {
   title: string;
   key: keyof T;
-  width?: number;
-  sortable?: boolean;
+  width?: number | undefined;
+  sortable?: boolean | undefined;
   render?: ((text: string, record: T, index: number) => React.ReactNode) | undefined;
 }
 
@@ -63,7 +63,7 @@ interface TableProps<T> extends MantineTableProps {
   rowSelection?: RowSelectionProps<T> | undefined;
 }
 
-export default function DataTable<T>({
+export default function DataTable<T extends object>({
   columns,
   data,
   pageSize,

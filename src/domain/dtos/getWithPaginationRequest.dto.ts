@@ -1,6 +1,6 @@
 export interface IGetWithPaginationRequest {
-  page?: number;
-  limit?: number;
-  sortBy?: string;
-  orderBy?: string;
+  page?: number | undefined;
+  limit?: number | undefined;
+  sortBy?: string | undefined;
+  order?: string | undefined;
 }

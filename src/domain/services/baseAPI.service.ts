@@ -23,23 +23,27 @@ export default abstract class BaseApiService {
     this.axios.interceptors.response.use(this.interceptResponseData.bind(this), this.interceptResponseError.bind(this));
   }
 
-  private async interceptBeforeRequest(config: AxiosRequestConfig) {
+  private async interceptBeforeRequest<D>(config: AxiosRequestConfig<D>) {
     return config;
   }
 
-  private interceptRequestError(error: AxiosError) {
-    return Promise.reject(error);
+  private interceptRequestError<T, D>(error: AxiosError<T, D>) {
+    return Promise.reject<AxiosError<T, D>>(error);
   }
 
-  private interceptResponseData(response: AxiosResponse) {
+  private interceptResponseData<T>(response: AxiosResponse<T>) {
     return response;
   }
 
-  private interceptResponseError(error: AxiosError) {
-    return Promise.reject(error);
+  private interceptResponseError<T, D>(error: AxiosError<T, D>) {
+    return Promise.reject<AxiosError<T, D>>(error);
   }
 
-  public get<T, P>(path: string, params?: P, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  public get<T>(
+    path: string,
+    params?: AxiosRequestConfig['params'],
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     return this.axios.get<T>(path, { params, ...config });
   }
 
@@ -48,22 +52,38 @@ export default abstract class BaseApiService {
     params: IGetWithPaginationRequest,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<IGetWithPaginationResponse<T>>> {
-    return this.get<IGetWithPaginationResponse<T>, IGetWithPaginationRequest>(path, params, config);
+    return this.get<IGetWithPaginationResponse<T>>(path, params, config);
   }
 
-  public post<T, D>(path: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  public post<T, D>(
+    path: string,
+    data?: AxiosRequestConfig<D>['data'],
+    config?: AxiosRequestConfig<D>
+  ): Promise<AxiosResponse<T>> {
     return this.axios.post<T>(path, data, config);
   }
 
-  public put<T, D>(path: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  public put<T, D>(
+    path: string,
+    data?: AxiosRequestConfig<D>['data'],
+    config?: AxiosRequestConfig<D>
+  ): Promise<AxiosResponse<T>> {
     return this.axios.put<T>(path, data, config);
   }
 
-  public patch<T, D>(path: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  public patch<T, D>(
+    path: string,
+    data?: AxiosRequestConfig<D>['data'],
+    config?: AxiosRequestConfig<D>
+  ): Promise<AxiosResponse<T>> {
     return this.axios.patch<T>(path, data, config);
   }
 
-  public delete<T, P>(path: string, params?: P, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  public delete<T>(
+    path: string,
+    params?: AxiosRequestConfig['params'],
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     return this.axios.delete<T>(path, { params, ...config });
   }
 }
