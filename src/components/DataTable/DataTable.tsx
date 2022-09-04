@@ -143,15 +143,15 @@ export default function DataTable<T extends object>({
                   />
                 </th>
               )}
-              {columns.map((col: ColumnType<T>) => (
+              {columns.map(({ key, title, width }: ColumnType<T>) => (
                 <HeaderColumn
-                  key={String(col.key)}
-                  sorted={sortBy === col.key}
+                  key={String(key)}
+                  sorted={sortBy === key}
                   reversed={reverseSortDirection}
-                  onSort={() => handleSortChange(col.key)}
-                  style={{ width: col.width }}
+                  onSort={() => handleSortChange(key)}
+                  style={{ width }}
                 >
-                  {col.title.toUpperCase()}
+                  {title.toUpperCase()}
                 </HeaderColumn>
               ))}
             </tr>

@@ -1,20 +1,22 @@
 import { useCallback, useState } from 'react';
 
-import { AxiosPromise } from 'axios';
+import { AxiosResponse } from 'axios';
 
-export type DeleteDataFunction = (params: string) => Promise<void>;
+export type DeleteDataFunction = (id: string, params?: unknown) => Promise<void>;
 
 export type UseDeleteRequest<T> = [T | null, DeleteDataFunction];
 
-export default function useDeleteRequest<T>(callbackfn: (id: string) => AxiosPromise<T>): UseDeleteRequest<T> {
+export default function useDeleteRequest<T>(
+  callbackFn: (id: string, params?: unknown) => Promise<AxiosResponse<T>>
+): UseDeleteRequest<T> {
   const [data, setData] = useState<T | null>(null);
 
   const deleteData: DeleteDataFunction = useCallback(
-    async (params: string) => {
-      const response = await callbackfn(params);
+    async (id: string, params?: unknown) => {
+      const response = await callbackFn(id, params);
       setData(response.data);
     },
-    [callbackfn]
+    [callbackFn]
   );
 
   return [data, deleteData];

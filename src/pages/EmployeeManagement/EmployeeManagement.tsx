@@ -89,9 +89,11 @@ export default function EmployeeManagement(): JSX.Element {
 
   const handleBulkDeleteEmployees: (employees: IEmployee[]) => Promise<void> = useCallback(
     async (employees: IEmployee[]) => {
+      const promisesBulkDeleteEmployees: Promise<void>[] = [];
+      employees.forEach((employee: IEmployee) => promisesBulkDeleteEmployees.push(deleteData(employee.id)));
       setLoading(true);
       try {
-        await Promise.all(employees.map((employee: IEmployee) => deleteData(employee.id)));
+        await Promise.all(promisesBulkDeleteEmployees);
         pushNotification('success', `Delete ${employees.length} employee(s) successfully!`);
         reloadTable();
       } catch (error) {
@@ -107,7 +109,7 @@ export default function EmployeeManagement(): JSX.Element {
     (async function fetchEmployees() {
       setLoading(true);
       try {
-        await getData({ page, limit: DEFAULT_PAGE_SIZE, order: 'desc' });
+        await getData({ page, limit: DEFAULT_PAGE_SIZE });
       } catch (error) {
         pushNotification('error', `Fail to fetch employees! Something went wrong!`);
       }
