@@ -4,6 +4,7 @@ import { Button, Drawer } from '@mantine/core';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconTrash, IconUserPlus } from '@tabler/icons';
+import { AxiosResponse } from 'axios';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 import { DataTable } from '../../components';
@@ -11,7 +12,6 @@ import { ColumnType } from '../../components/DataTable';
 import { ICreateEmployeeRequest } from '../../domain/dtos/createEmployeeRequest.dto';
 import { IEmployee } from '../../domain/models/employee.model';
 import { employeeApiService } from '../../domain/services';
-import { useDeleteRequest, useGetRequest, usePostRequest } from '../../hooks';
 import { pushNotification } from '../../utils';
 import { EmployeeAdditionForm } from './components';
 
@@ -41,7 +41,9 @@ const columns: ColumnType<IEmployee>[] = [
 
 export default function EmployeeManagement(): JSX.Element {
   /* State */
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [employees, setEmployees] = useState<IEmployee[]>([]);
+  const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [toggleEmployeeAdditionForm, setToggleEmployeeAdditionForm] = useState<boolean>(false);
   const [reload, setReload] = useState<number>(0);
@@ -56,9 +58,6 @@ export default function EmployeeManagement(): JSX.Element {
       position: ''
     }
   });
-  const [data, getData] = useGetRequest(employeeApiService.getEmployeesWithPagination);
-  const [, postData] = usePostRequest(employeeApiService.createEmployee);
-  const [, deleteData] = useDeleteRequest(employeeApiService.deleteEmployee);
 
   /* Functions */
   const handlePaginationChange: (page: number) => void = (page: number) => {
@@ -74,8 +73,9 @@ export default function EmployeeManagement(): JSX.Element {
   const handleSubmitForm: (e: FormEvent<HTMLFormElement>) => Promise<void> = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      const { values } = employeeAdditionForm;
       try {
-        await postData(employeeAdditionForm.values);
+        await employeeApiService.createEmployee(values);
         pushNotification('success', 'Add new employee successfully!');
         reloadTable();
       } catch (error) {
@@ -84,13 +84,13 @@ export default function EmployeeManagement(): JSX.Element {
       employeeAdditionForm.reset();
       setToggleEmployeeAdditionForm(false);
     },
-    [employeeAdditionForm, postData]
+    [employeeAdditionForm]
   );
 
   const handleBulkDeleteEmployees: (employees: IEmployee[]) => Promise<void> = useCallback(
     async (employees: IEmployee[]) => {
-      const promisesBulkDeleteEmployees: Promise<void>[] = [];
-      employees.forEach((employee: IEmployee) => promisesBulkDeleteEmployees.push(deleteData(employee.id)));
+      const promisesBulkDeleteEmployees: Promise<AxiosResponse<IEmployee>>[] = [];
+      employees.forEach(({ id }: IEmployee) => promisesBulkDeleteEmployees.push(employeeApiService.deleteEmployee(id)));
       setLoading(true);
       try {
         await Promise.all(promisesBulkDeleteEmployees);
@@ -101,21 +101,24 @@ export default function EmployeeManagement(): JSX.Element {
       }
       setLoading(false);
     },
-    [deleteData]
+    []
   );
 
   /* Effects */
   useEffect(() => {
     (async function fetchEmployees() {
+      const paginationQueryParams = { page, limit: DEFAULT_PAGE_SIZE };
       setLoading(true);
       try {
-        await getData({ page, limit: DEFAULT_PAGE_SIZE });
+        const { data } = await employeeApiService.getEmployeesWithPagination(paginationQueryParams);
+        setEmployees(data.items);
+        setTotal(data.total);
       } catch (error) {
         pushNotification('error', `Fail to fetch employees! Something went wrong!`);
       }
       setLoading(false);
     })();
-  }, [getData, page, reload]);
+  }, [page, reload]);
 
   return (
     <>
@@ -143,17 +146,17 @@ export default function EmployeeManagement(): JSX.Element {
       </div>
       <DataTable
         columns={columns}
-        data={data?.items || []}
+        data={employees}
         pageSize={DEFAULT_PAGE_SIZE}
         highlightOnHover
-        loading={isLoading}
+        loading={loading}
         searchable
         rowSelection={{
           selectedRows: selectedEmployees,
           onChange: (items: IEmployee[]) => setSelectedEmployees(items)
         }}
         pagination={{
-          total: data?.total || 0,
+          total,
           onChange: handlePaginationChange
         }}
       />
@@ -165,7 +168,7 @@ export default function EmployeeManagement(): JSX.Element {
         size="xl"
         padding={32}
       >
-        <EmployeeAdditionForm form={employeeAdditionForm} onSubmit={handleSubmitForm} loading={isLoading} />
+        <EmployeeAdditionForm form={employeeAdditionForm} onSubmit={handleSubmitForm} loading={loading} />
       </Drawer>
     </>
   );
