@@ -30,7 +30,7 @@ interface HeaderColumnProps extends PropsWithChildren, React.ThHTMLAttributes<HT
   onSort: () => void;
 }
 
-function HeaderColumn({ children, reversed, sorted, onSort }: HeaderColumnProps) {
+function HeaderColumn({ children, reversed, sorted, onSort }: HeaderColumnProps): JSX.Element {
   const directionIcon = reversed ? IconChevronUp : IconChevronDown;
   const Icon = sorted ? directionIcon : IconSelector;
   return (

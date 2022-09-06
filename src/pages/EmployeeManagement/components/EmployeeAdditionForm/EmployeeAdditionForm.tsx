@@ -10,7 +10,7 @@ interface EmployeeAdditionFormProps {
   loading?: boolean | undefined;
 }
 
-export default function EmployeeAdditionForm({ form, onSubmit, loading }: EmployeeAdditionFormProps) {
+export default function EmployeeAdditionForm({ form, onSubmit, loading }: EmployeeAdditionFormProps): JSX.Element {
   return (
     <Box component="form" onSubmit={onSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <TextInput required label="Employee name" icon={<IconUser size={20} />} {...form.getInputProps('name')} />
