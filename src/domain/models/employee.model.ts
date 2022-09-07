@@ -11,7 +11,7 @@ export default class Employee implements IEmployee {
   public name: string = '';
   public email: string = '';
   public position: string = '';
-  public createdAt!: Date;
+  public createdAt: Date = new Date();
 
   constructor(data?: IEmployee | undefined) {
     if (data) {
