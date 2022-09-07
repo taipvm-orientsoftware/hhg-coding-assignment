@@ -4,7 +4,6 @@ import { Button, Drawer } from '@mantine/core';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconTrash, IconUserPlus } from '@tabler/icons';
-import { AxiosResponse } from 'axios';
 
 import { DEFAULT_PAGE_SIZE } from '../../common/constants';
 import { DataTable } from '../../components';
@@ -77,29 +76,30 @@ export default function EmployeeManagement(): JSX.Element {
       try {
         await employeeApiService.createEmployee(values);
         pushNotification('success', 'Add new employee successfully!');
-        reloadTable();
       } catch (error) {
         pushNotification('error', 'Add new employee fail!');
+      } finally {
+        employeeAdditionForm.reset();
+        setToggleEmployeeAdditionForm(false);
+        reloadTable();
       }
-      employeeAdditionForm.reset();
-      setToggleEmployeeAdditionForm(false);
     },
     [employeeAdditionForm]
   );
 
   const handleBulkDeleteEmployees: (employees: IEmployee[]) => Promise<void> = useCallback(
     async (employees: IEmployee[]) => {
-      const promisesBulkDeleteEmployees: Promise<AxiosResponse<IEmployee>>[] = [];
-      employees.forEach(({ id }: IEmployee) => promisesBulkDeleteEmployees.push(employeeApiService.deleteEmployee(id)));
+      const employeeIds: IEmployee['id'][] = employees.map(({ id }: IEmployee) => id);
       setLoading(true);
       try {
-        await Promise.all(promisesBulkDeleteEmployees);
+        await employeeApiService.bulkDeleteEmployees(employeeIds);
         pushNotification('success', `Delete ${employees.length} employee(s) successfully!`);
-        reloadTable();
       } catch (error) {
         pushNotification('error', 'Delete employees fail!');
+      } finally {
+        setLoading(false);
+        reloadTable();
       }
-      setLoading(false);
     },
     []
   );
@@ -115,8 +115,9 @@ export default function EmployeeManagement(): JSX.Element {
         setTotal(data.total);
       } catch (error) {
         pushNotification('error', `Fail to fetch employees! Something went wrong!`);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     })();
   }, [page, reload]);
 

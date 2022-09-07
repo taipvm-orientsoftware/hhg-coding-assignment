@@ -1,6 +1,7 @@
+import { Location, NavigateFunction, Outlet, useLocation, useNavigate } from 'react-router-dom';
+
 import { Center, SegmentedControl, Stack, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { Location, NavigateFunction, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 export default function MainLayout(): JSX.Element {
   const navigate: NavigateFunction = useNavigate();

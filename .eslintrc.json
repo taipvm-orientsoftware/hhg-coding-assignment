@@ -29,7 +29,6 @@
   "rules": {
     "no-param-reassign": ["error", { "props": false }],
     "class-methods-use-this": "off",
-    "@typescript-eslint/lines-between-class-members": "off",
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -69,25 +68,30 @@
         "propertyDeclaration": true
       }
     ],
-    "import/order": [
-      "error",
-      {
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        },
-        "groups": [["builtin", "external"], "internal", ["parent", "sibling"], "index"],
-        "pathGroups": [
-          {
-            "pattern": "react",
-            "group": "builtin",
-            "position": "before"
-          }
-        ],
-        "pathGroupsExcludedImportTypes": ["react"]
-      }
-    ],
+    // "import/order": [
+    //   "error",
+    //   {
+    //     "newlines-between": "always",
+    //     "alphabetize": {
+    //       "order": "asc",
+    //       "caseInsensitive": true
+    //     },
+    //     "groups": [["builtin", "external"], "internal", ["parent", "sibling"], "index"],
+    //     "pathGroups": [
+    //       {
+    //         "pattern": "react",
+    //         "group": "builtin",
+    //         "position": "before"
+    //       },
+    //       {
+    //         "pattern": "^[@]",
+    //         "group": "internal",
+    //         "position": "after"
+    //       }
+    //     ],
+    //     "pathGroupsExcludedImportTypes": ["react"]
+    //   }
+    // ],
     "import/prefer-default-export": "off",
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",

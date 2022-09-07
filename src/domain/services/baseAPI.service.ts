@@ -7,9 +7,10 @@ export interface IGetWithPaginationResponse<T> {
   total: number;
 }
 
-export default abstract class BaseApiService {
-  protected abstract baseRoute: string;
+export default abstract class BaseApiService<T> {
   private axios: AxiosInstance;
+
+  protected abstract baseRoute: string;
 
   constructor() {
     this.axios = axios.create({
@@ -30,46 +31,46 @@ export default abstract class BaseApiService {
     return config;
   }
 
-  private interceptRequestError<T, D>(error: AxiosError<T, D>) {
+  private interceptRequestError<D>(error: AxiosError<T, D>) {
     return Promise.reject<AxiosError<T, D>>(error);
   }
 
-  private interceptResponseData<T>(response: AxiosResponse<T>) {
+  private interceptResponseData(response: AxiosResponse<T>) {
     return response;
   }
 
-  private interceptResponseError<T, D>(error: AxiosError<T, D>) {
+  private interceptResponseError<D>(error: AxiosError<T, D>) {
     if (error.response?.status === 401) {
       // TODO redirect login
     }
     return Promise.reject<AxiosError<T, D>>(error);
   }
 
-  public get<T>(path: string, params?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  public get(path: string, params?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.axios.get<T>(path, { params, ...config });
   }
 
-  public getWithPagination<T>(
+  public getWithPagination(
     path: string,
     params?: IGetWithPaginationRequest,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<IGetWithPaginationResponse<T>>> {
-    return this.get<IGetWithPaginationResponse<T>>(path, params, config);
+    return this.axios.get<IGetWithPaginationResponse<T>>(path, { params, ...config });
   }
 
-  public post<T, D>(path: string, data: D, config?: AxiosRequestConfig<D>): Promise<AxiosResponse<T, D>> {
+  public post<D>(path: string, data: D, config?: AxiosRequestConfig<D>): Promise<AxiosResponse<T, D>> {
     return this.axios.post<T, AxiosResponse<T, D>, D>(path, data, config);
   }
 
-  public put<T, D>(path: string, data: D, config?: AxiosRequestConfig<D>): Promise<AxiosResponse<T, D>> {
+  public put<D>(path: string, data: D, config?: AxiosRequestConfig<D>): Promise<AxiosResponse<T, D>> {
     return this.axios.put<T, AxiosResponse<T, D>, D>(path, data, config);
   }
 
-  public patch<T, D>(path: string, data: D, config?: AxiosRequestConfig<D>): Promise<AxiosResponse<T, D>> {
+  public patch<D>(path: string, data: D, config?: AxiosRequestConfig<D>): Promise<AxiosResponse<T, D>> {
     return this.axios.patch<T, AxiosResponse<T, D>, D>(path, data, config);
   }
 
-  public delete<T>(path: string, params?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  public delete(path: string, params?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return this.axios.delete<T>(path, { params, ...config });
   }
 }
