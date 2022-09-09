@@ -60,15 +60,15 @@ export default function EmployeeManagement(): JSX.Element {
   });
 
   /* Functions */
-  const handlePaginationChange: (page: number) => void = (page: number) => {
+  const handlePaginationChange: (page: number) => void = useCallback((page: number) => {
     setSelectedEmployees([]);
     setPage(page);
-  };
+  }, []);
 
-  const reloadTable: () => void = () => {
+  const reloadTable: () => void = useCallback(() => {
     setSelectedEmployees([]);
     setReload((reload: number) => reload + 1);
-  };
+  }, []);
 
   const handleSubmitForm: (e: FormEvent<HTMLFormElement>) => Promise<void> = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
@@ -85,7 +85,7 @@ export default function EmployeeManagement(): JSX.Element {
         reloadTable();
       }
     },
-    [employeeAdditionForm]
+    [employeeAdditionForm, reloadTable]
   );
 
   const handleBulkDeleteEmployees: (employees: IEmployee[]) => Promise<void> = useCallback(
@@ -102,7 +102,7 @@ export default function EmployeeManagement(): JSX.Element {
         reloadTable();
       }
     },
-    []
+    [reloadTable]
   );
 
   /* Effects */

@@ -7,7 +7,7 @@ export interface IGetWithPaginationResponse<T> {
   total: number;
 }
 
-export default abstract class BaseApiService<T> {
+export default abstract class BaseApiService<T = unknown> {
   private axios: AxiosInstance;
 
   protected abstract baseRoute: string;
@@ -23,10 +23,10 @@ export default abstract class BaseApiService<T> {
     this.axios.interceptors.response.use(this.interceptResponseData.bind(this), this.interceptResponseError.bind(this));
   }
 
-  private async interceptBeforeRequest<D>(config: AxiosRequestConfig<D>) {
+  private interceptBeforeRequest<D>(config: AxiosRequestConfig<D>) {
     if (config.headers) {
       const accessToken = localStorage.getItem('access_token');
-      config.headers['X-Access-Token'] = `Bearer ${accessToken}`;
+      config.headers['X-Access-Token'] = `Bearer ${String(accessToken)}`;
     }
     return config;
   }

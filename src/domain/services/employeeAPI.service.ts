@@ -35,10 +35,8 @@ class EmployeeApiService extends BaseApiService<IEmployee> {
   }
 
   public bulkDeleteEmployees(ids: IEmployee['id'][]) {
-    const promisesDeleteEmployees: Promise<AxiosResponse<IEmployee>>[] = ids.map((id: IEmployee['id']) =>
-      this.deleteEmployee(id)
-    );
-    return Promise.allSettled(promisesDeleteEmployees);
+    const promisesDeleteEmployees = ids.map((id: IEmployee['id']) => this.deleteEmployee(id));
+    return Promise.all(promisesDeleteEmployees);
   }
 }
 

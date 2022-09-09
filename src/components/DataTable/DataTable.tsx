@@ -80,9 +80,9 @@ export default function DataTable<T extends object>({
   const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
   const selectedRows: MutableRefObject<T[] | undefined> = useRef(rowSelection?.selectedRows);
 
-  const toggleSelectAllItems: () => void = useCallback(() => {
+  const toggleSelectAllItems = useCallback(() => {
     if (rowSelection && selectedRows.current) {
-      selectedRows.current = selectedRows.current.length === data?.length ? [] : data;
+      selectedRows.current = selectedRows.current.length === data.length ? [] : data;
       rowSelection.onChange(selectedRows.current);
     }
   }, [data, rowSelection]);
@@ -113,7 +113,7 @@ export default function DataTable<T extends object>({
 
   useEffect(() => {
     selectedRows.current = rowSelection?.selectedRows;
-  }, [rowSelection?.selectedRows]);
+  }, [rowSelection?.selectedRows, data]);
 
   return (
     <>
@@ -133,11 +133,11 @@ export default function DataTable<T extends object>({
               {rowSelection && (
                 <th style={{ width: 40 }}>
                   <Checkbox
-                    checked={selectedRows.current?.length !== 0 && selectedRows.current?.length === data?.length}
+                    checked={selectedRows.current?.length !== 0 && selectedRows.current?.length === data.length}
                     indeterminate={
                       selectedRows.current &&
                       selectedRows.current.length > 0 &&
-                      selectedRows.current.length !== data?.length
+                      selectedRows.current.length !== data.length
                     }
                     onChange={toggleSelectAllItems}
                   />
@@ -157,7 +157,7 @@ export default function DataTable<T extends object>({
             </tr>
           </thead>
           <tbody>
-            {data?.map((item: T, index: number) => (
+            {data.map((item: T, index: number) => (
               // eslint-disable-next-line react/no-array-index-key
               <tr key={index}>
                 {rowSelection && (
@@ -172,7 +172,7 @@ export default function DataTable<T extends object>({
                 )}
                 {columns.map(({ key, render }: ColumnType<T>) => (
                   <td key={String(key)}>
-                    {render ? render(String(item[key]), item, index) : (item[key] as unknown as string)}
+                    {render ? render(String(item[key]), item, index) : (item[key] as unknown as React.ReactNode)}
                   </td>
                 ))}
               </tr>
@@ -185,7 +185,7 @@ export default function DataTable<T extends object>({
           {...pagination}
           total={Math.ceil(pagination.total / pageSize)}
           onChange={pagination.onChange}
-          position={pagination.position || 'center'}
+          position={pagination.position ?? 'center'}
           size={largeScreen ? 'md' : 'sm'}
         />
       )}

@@ -1,5 +1,6 @@
-import { Button, ButtonProps } from '@mantine/core';
 import { LinkProps, NavLink, useMatch, useResolvedPath } from 'react-router-dom';
+
+import { Button, ButtonProps } from '@mantine/core';
 
 export default function LinkButton({ to, size = 'sm', ...props }: LinkProps & ButtonProps): JSX.Element {
   const resolved = useResolvedPath(to);
