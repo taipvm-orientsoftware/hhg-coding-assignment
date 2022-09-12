@@ -31,11 +31,6 @@ const columns: ColumnType<IEmployee>[] = [
   {
     title: 'Position',
     key: 'position'
-  },
-  {
-    title: 'Created Date',
-    key: 'createdAt',
-    render: (isoDate: string) => <>{new Date(isoDate).toISOString().substring(0, 10)}</>
   }
 ];
 

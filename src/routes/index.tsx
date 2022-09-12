@@ -1,7 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { MainLayout } from '../layouts';
-import { EmployeeManagement, MenuCss } from '../pages';
+import { EmployeeManagement } from '../pages';
 
 export default function Routes() {
   return useRoutes([
@@ -16,10 +16,6 @@ export default function Routes() {
         {
           path: 'employee-management',
           element: <EmployeeManagement />
-        },
-        {
-          path: 'menu-css',
-          element: <MenuCss />
         }
       ]
     }

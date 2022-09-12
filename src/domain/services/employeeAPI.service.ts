@@ -4,7 +4,7 @@ import { ICreateEmployeeRequest } from '../dtos/createEmployeeRequest.dto';
 import { IGetWithPaginationRequest } from '../dtos/getWithPaginationRequest.dto';
 import { IEmployee } from '../models/employee.model';
 
-import BaseApiService, { IGetWithPaginationResponse } from './baseAPI.service';
+import BaseApiService, { IGetWithPaginationResponse } from './baseApi.service';
 
 class EmployeeApiService extends BaseApiService<IEmployee> {
   protected baseRoute: string = '/employees';

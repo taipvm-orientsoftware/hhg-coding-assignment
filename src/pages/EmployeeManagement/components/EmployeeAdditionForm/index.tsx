@@ -2,15 +2,13 @@ import { Box, Button, TextInput } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { IconBallpen, IconMail, IconUser } from '@tabler/icons';
 
-import { ICreateEmployeeRequest } from '../../../../domain/dtos/createEmployeeRequest.dto';
-
-interface EmployeeAdditionFormProps {
-  form: UseFormReturnType<ICreateEmployeeRequest>;
+interface EmployeeAdditionFormProps<T> {
+  form: UseFormReturnType<T>;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
   loading?: boolean | undefined;
 }
 
-export default function EmployeeAdditionForm({ form, onSubmit, loading }: EmployeeAdditionFormProps): JSX.Element {
+export default function EmployeeAdditionForm<T>({ form, onSubmit, loading }: EmployeeAdditionFormProps<T>) {
   return (
     <Box component="form" onSubmit={onSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <TextInput required label="Employee name" icon={<IconUser size={20} />} {...form.getInputProps('name')} />

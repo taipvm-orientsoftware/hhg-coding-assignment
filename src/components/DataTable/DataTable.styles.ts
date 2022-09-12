@@ -12,7 +12,7 @@ export const Button = createPolymorphicComponent<'button', UnstyledButtonProps>(
   padding: 7px 10px;
   &:hover {
     background-color: ${({ theme }: { theme: Theme }) =>
-      theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme?.colors.gray[0]};
+      theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0]};
   }
 `);
 

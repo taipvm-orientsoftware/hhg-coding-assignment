@@ -7,13 +7,11 @@
     "airbnb",
     "airbnb/hooks",
     "airbnb-typescript",
-    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:@typescript-eslint/strict",
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:prettier/recommended"
@@ -30,8 +28,8 @@
   "plugins": ["react", "@typescript-eslint", "simple-import-sort"],
   "rules": {
     "no-param-reassign": ["error", { "props": false }],
-    "class-methods-use-this": "off",
-    "@typescript-eslint/lines-between-class-members": "off",
+    "class-methods-use-this": ["error", { "enforceForClassFields": false }],
+    "@typescript-eslint/lines-between-class-members": ["warn", "always", { "exceptAfterSingleLine": true }],
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -53,6 +51,16 @@
         "ignoreProperties": true
       }
     ],
+    "@typescript-eslint/no-floating-promises": ["error", { "ignoreVoid": true, "ignoreIIFE": true }],
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "arguments": false,
+          "attributes": false
+        }
+      }
+    ],
     "@typescript-eslint/no-shadow": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
@@ -62,15 +70,7 @@
         "ignoreRestSiblings": true
       }
     ],
-    "@typescript-eslint/typedef": [
-      "error",
-      {
-        // "arrowParameter": true,
-        "memberVariableDeclaration": true,
-        "parameter": true,
-        "propertyDeclaration": true
-      }
-    ],
+    "@typescript-eslint/non-nullable-type-assertion-style": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "import/newline-after-import": "error",

@@ -16,10 +16,7 @@ export default function MainLayout(): JSX.Element {
       <Stack justify="center" spacing="md" sx={{ maxWidth: 1140, width: '100%' }} mb="lg">
         <SegmentedControl
           size={largeScreen ? 'sm' : 'xs'}
-          data={[
-            { label: 'Employee Management', value: 'employee-management' }
-            // { label: 'Menu CSS Challenge', value: 'menu-css' }
-          ]}
+          data={[{ label: 'Employee Management', value: 'employee-management' }]}
           value={pathname.replace('/', '')}
           onChange={(value: string) => navigate(value)}
           sx={{ maxWidth: 768, alignSelf: 'center' }}
