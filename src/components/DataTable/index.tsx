@@ -1,4 +1,4 @@
-import React, { MutableRefObject, PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   Checkbox,
@@ -72,22 +72,22 @@ export default function DataTable<T extends object>({
   rowSelection,
   pagination,
   ...props
-}: TableProps<T>): JSX.Element {
+}: TableProps<T>) {
   const [searchTerm, _setSearchTerm] = useState<string>('');
   const [sortBy, setSortBy] = useState<ColumnType<T>['key'] | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState<boolean>(false);
 
-  const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
-  const selectedRows: MutableRefObject<T[] | undefined> = useRef(rowSelection?.selectedRows);
+  const largeScreen = useMediaQuery('(min-width: 1367px)');
+  const selectedRows = useRef<T[] | undefined>(rowSelection?.selectedRows);
 
-  const toggleSelectAllItems = useCallback(() => {
+  const toggleSelectAllItems = useCallback<() => void>(() => {
     if (rowSelection && selectedRows.current) {
       selectedRows.current = selectedRows.current.length === data.length ? [] : data;
       rowSelection.onChange(selectedRows.current);
     }
   }, [data, rowSelection]);
 
-  const toggleSelectItem: (isSelected: boolean, item: T) => void = useCallback(
+  const toggleSelectItem = useCallback<(isSelected: boolean, item: T) => void>(
     (isSelected: boolean, item: T) => {
       if (rowSelection && selectedRows.current) {
         selectedRows.current = isSelected
@@ -102,7 +102,7 @@ export default function DataTable<T extends object>({
     [rowSelection]
   );
 
-  const handleSortChange: (field: ColumnType<T>['key']) => void = useCallback(
+  const handleSortChange = useCallback<(field: ColumnType<T>['key']) => void>(
     (field: ColumnType<T>['key']) => {
       const reversed = field === sortBy ? !reverseSortDirection : false;
       setReverseSortDirection(reversed);

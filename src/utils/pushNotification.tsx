@@ -4,7 +4,7 @@ import { IconCheck, IconX } from '@tabler/icons';
 type NotificationType = 'default' | 'success' | 'error';
 type NotificationStatus = Record<NotificationType, Pick<NotificationProps, 'color' | 'icon'>>;
 
-export default function pushNotification(type: NotificationType, message: string): void {
+export default function pushNotification(type: NotificationType, message: string) {
   const notificationStatus: NotificationStatus = {
     default: {
       color: 'blue',

@@ -1,7 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 
 import { Button, Drawer } from '@mantine/core';
-import { useForm, UseFormReturnType } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconTrash, IconUserPlus } from '@tabler/icons';
 
@@ -34,7 +34,7 @@ const columns: ColumnType<IEmployee>[] = [
   }
 ];
 
-export default function EmployeeManagement(): JSX.Element {
+export default function EmployeeManagement() {
   /* State */
   const [loading, setLoading] = useState<boolean>(false);
   const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -45,8 +45,8 @@ export default function EmployeeManagement(): JSX.Element {
   const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
 
   /* Custom hooks */
-  const largeScreen: boolean = useMediaQuery('(min-width: 1367px)');
-  const employeeAdditionForm: UseFormReturnType<ICreateEmployeeRequest> = useForm<ICreateEmployeeRequest>({
+  const largeScreen = useMediaQuery('(min-width: 1367px)');
+  const employeeAdditionForm = useForm<ICreateEmployeeRequest>({
     initialValues: {
       name: '',
       email: '',
@@ -55,17 +55,17 @@ export default function EmployeeManagement(): JSX.Element {
   });
 
   /* Functions */
-  const handlePaginationChange: (page: number) => void = useCallback((page: number) => {
+  const handlePaginationChange = useCallback<(page: number) => void>((page: number) => {
     setSelectedEmployees([]);
     setPage(page);
   }, []);
 
-  const reloadTable: () => void = useCallback(() => {
+  const reloadTable = useCallback<() => void>(() => {
     setSelectedEmployees([]);
     setReload((reload: number) => reload + 1);
   }, []);
 
-  const handleSubmitForm: (e: FormEvent<HTMLFormElement>) => Promise<void> = useCallback(
+  const handleSubmitForm = useCallback<(e: FormEvent<HTMLFormElement>) => Promise<void>>(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const { values } = employeeAdditionForm;
@@ -83,7 +83,7 @@ export default function EmployeeManagement(): JSX.Element {
     [employeeAdditionForm, reloadTable]
   );
 
-  const handleBulkDeleteEmployees: (employees: IEmployee[]) => Promise<void> = useCallback(
+  const handleBulkDeleteEmployees = useCallback<(employees: IEmployee[]) => Promise<void>>(
     async (employees: IEmployee[]) => {
       const employeeIds: IEmployee['id'][] = employees.map(({ id }: IEmployee) => id);
       setLoading(true);
